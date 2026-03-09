@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CAMON 50 Assessment - AI Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+    <style>
+        .u2-body {
+            background: #fff;
+        }
+
+        /* Assessment Specific Header */
+        .u2-exam-header {
+            padding: 4.5rem 1.25rem 1rem;
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .u2-timer-pill {
+            background: #F5F3FF;
+            color: var(--primary-purple);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Question Progress Bar */
+        .u2-progress-fixed {
+            height: 4px;
+            background: #F3F4F6;
+            width: 100%;
+        }
+
+        .u2-progress-bar-fill {
+            height: 100%;
+            background: var(--primary-purple);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Question Card */
+        .u2-q-card {
+            background: white;
+            padding: 1.5rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .u2-q-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .u2-q-text {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Options */
+        .u2-opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .u2-opt-item {
+            padding: 1.125rem;
+            background: white;
+            border: 2px solid #F3F4F6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .u2-opt-item.active {
+            border-color: var(--primary-purple);
+            background: #F5F3FF;
+        }
+
+        .u2-radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .active .u2-radio-circle {
+            border-color: var(--primary-purple);
+            background: var(--primary-purple);
+            box-shadow: 0 0 0 4px white inset;
+        }
+
+        .u2-opt-label {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Voice Interaction */
+        .u2-voice-box {
+            background: #F9FAFB;
+            border-radius: 1.5rem;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 1px dashed #E5E7EB;
+        }
+
+        .u2-record-btn {
+            width: 72px;
+            height: 72px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            transition: all 0.2s;
+        }
+
+        .u2-record-btn.recording {
+            background: #EF4444;
+            animation: breathe 1.5s infinite;
+        }
+
+        @keyframes breathe {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* Media */
+        .u2-video-frame {
+            border-radius: 1.5rem;
+            overflow: hidden;
+            background: black;
+            margin-bottom: 1.5rem;
+            aspect-ratio: 16/9;
+        }
+
+        /* Result Styles */
+        .u2-score-hero {
+            padding: 3rem 1.5rem;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            text-align: center;
+            border-radius: 0 0 2rem 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .u2-score-val {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1;
+            margin: 0.5rem 0;
+            letter-spacing: -0.05em;
+        }
+
+        .u2-analysis-card {
+            background: #F3F4F6;
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .u2-review-item {
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid var(--card-border);
+            margin-bottom: 0.75rem;
+            background: white;
+        }
+
+        .u2-review-item.correct {
+            border-left: 4px solid #10B981;
+        }
+
+        .u2-review-item.wrong {
+            border-left: 4px solid #EF4444;
+        }
+
+        .u2-review-item.pending {
+            border-left: 4px solid #F59E0B;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="u2-body showcase-body">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div class="time" id="currentTime">9:41</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+
+            <div id="examHeader" class="u2-exam-header">
+                <a href="015.html"
+                    class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-900">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <span class="text-sm font-black text-gray-900 uppercase tracking-widest">Assessment Mode</span>
+                <div class="u2-timer-pill">
+                    <i class="far fa-clock"></i>
+                    <span id="timeDisplay">15:00</span>
+                </div>
+            </div>
+
+            <div id="examProgress" class="u2-progress-fixed">
+                <div id="progressBar" class="u2-progress-bar-fill"></div>
+            </div>
+
+            <!-- Quiz Content Container -->
+            <div class="w-full h-full flex flex-col overflow-hidden bg-white">
+                <div id="mainArea" class="flex-grow overflow-y-auto hide-scrollbar pb-32">
+                    <!-- Questions or Results injected here -->
+                </div>
+
+                <!-- Footer Navigation -->
+                <div id="examFooter" class="absolute bottom-6 left-5 right-5 z-20 flex gap-4">
+                    <button id="prevBtn" onclick="prevQuestion()"
+                        class="flex-1 py-4 rounded-2xl bg-gray-100 text-gray-500 font-black text-sm uppercase tracking-wider transition-all">Back</button>
+                    <button id="nextBtn" onclick="nextQuestion()"
+                        class="flex-[1.5] py-4 rounded-2xl bg-indigo-600 text-white font-black text-sm uppercase tracking-wider shadow-lg shadow-indigo-100 transition-all">Next
+                        Step</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                type: "single",
+                media: "video",
+                mediaSrc: "https://vjs.zencdn.net/v/oceans.mp4",
+                tag: "Marketing",
+                tagColor: "bg-blue-600 text-white",
+                question: "In the first 3 seconds, which technique is used to hook users?",
+                options: ["Slow introduction", "Visual hook", "Pure black screen", "No music"],
+                answer: 1,
+                score: 5
+            },
+            {
+                id: 2,
+                type: "voice",
+                tag: "Sales Practice",
+                tagColor: "bg-orange-600 text-white",
+                question: "[Roleplay] Customer says “Brand is weak and too expensive”. Reply by voice.",
+                answer: "Key points: Acknowledge -> Brand proof -> Spec comparison -> Drive trial",
+                score: 24
+            },
+            {
+                id: 3,
+                type: "single",
+                tag: "Product",
+                tagColor: "bg-indigo-600 text-white",
+                question: "For gaming users, which FAB pitch is the most convincing?",
+                options: ["G85 processor", "Big battery", "G85 + HIOS engine, smooth gaming", "Large display"],
+                answer: 2,
+                score: 4
+            },
+            {
+                id: 4,
+                type: "multi",
+                tag: "System",
+                tagColor: "bg-purple-600 text-white",
+                question: "What are HIOS differentiated selling points? (Multiple choice)",
+                options: ["Smart Panel", "Ella", "Peek Proof", "Kids Mode"],
+                answer: [0, 1, 2, 3],
+                score: 4
+            },
+            {
+                id: 5,
+                type: "voice",
+                tag: "Soft Skills",
+                tagColor: "bg-emerald-600 text-white",
+                question: "[Managing up] Sales target not met. Reply to your manager by voice.",
+                answer: "Key flow: Data -> Root causes -> Recovery plan",
+                score: 15
+            }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let timeLeft = 15 * 60;
+        let timerInterval;
+
+        function updateSysTime() {
+            const now = new Date();
+            document.getElementById('currentTime').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+        setInterval(updateSysTime, 1000);
+        updateSysTime();
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                let s = (timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById('timeDisplay').innerText = `${m}:${s}`;
+                if (timeLeft <= 0) submitQuiz();
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentIdx];
+            const container = document.getElementById('mainArea');
+
+            let html = `<div class="u2-q-card">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="u2-q-badge ${q.tagColor}">${q.tag}</span>
+                    <span class="text-[10px] font-black text-gray-400 tracking-widest">${q.score} PTS</span>
+                </div>
+                <h2 class="u2-q-text">${q.question}</h2>`;
+
+            if (q.media === 'video') {
+                html += `<div class="u2-video-frame"><video src="${q.mediaSrc}" class="w-full h-full object-cover" controls playsinline></video></div>`;
+            }
+
+            if (q.type === 'voice') {
+                html += `
+                <div class="u2-voice-box mt-4">
+                    <button id="rBtn" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()" class="u2-record-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <p id="rHint" class="text-xs font-black text-gray-500 uppercase tracking-widest">Hold to Record</p>
+                    <div id="audioStatus" class="mt-4 text-indigo-600 font-bold text-xs" style="display:${userAnswers[currentIdx] ? 'block' : 'none'}"><i class="fas fa-check-circle mr-1"></i> Recorded_Session.mp4</div>
+                </div>`;
+            } else {
+                html += `<div class="u2-opt-list">`;
+                q.options.forEach((opt, idx) => {
+                    const isActive = Array.isArray(userAnswers[currentIdx]) ? userAnswers[currentIdx].includes(idx) : userAnswers[currentIdx] === idx;
+                    html += `
+                    <div class="u2-opt-item ${isActive ? 'active' : ''}" onclick="selectOption(${idx})">
+                        <div class="u2-radio-circle"></div>
+                        <span class="u2-opt-label">${opt}</span>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+
+            container.innerHTML = html + `</div>`;
+
+            // UI Updates
+            document.getElementById('progressBar').style.width = ((currentIdx + 1) / quizData.length) * 100 + '%';
+            document.getElementById('prevBtn').style.opacity = currentIdx === 0 ? '0' : '1';
+            document.getElementById('prevBtn').disabled = currentIdx === 0;
+            document.getElementById('nextBtn').innerText = currentIdx === quizData.length - 1 ? 'Finish Now' : 'Continue';
+        }
+
+        function selectOption(idx) {
+            const q = quizData[currentIdx];
+            if (q.type === 'single') {
+                userAnswers[currentIdx] = idx;
+            } else {
+                let arr = userAnswers[currentIdx] || [];
+                if (arr.includes(idx)) arr = arr.filter(i => i !== idx);
+                else arr.push(idx);
+                userAnswers[currentIdx] = arr.length ? arr : null;
+            }
+            renderQuestion();
+        }
+
+        function startRec() {
+            document.getElementById('rBtn').classList.add('recording');
+            document.getElementById('rHint').innerText = "RECORDING NOW";
+        }
+
+        function stopRec() {
+            document.getElementById('rBtn').classList.remove('recording');
+            document.getElementById('rHint').innerText = "HOLD TO RECORD";
+            userAnswers[currentIdx] = "VOICE_REPLY";
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentIdx < quizData.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('examHeader').style.display = 'none';
+            document.getElementById('examProgress').style.display = 'none';
+            document.getElementById('examFooter').style.display = 'none';
+
+            const main = document.getElementById('mainArea');
+            main.innerHTML = "";
+
+            let score = 0, correctCount = 0, pendingCount = 0;
+            quizData.forEach((q, idx) => {
+                if (q.type === 'voice') pendingCount++;
+                else {
+                    const ans = userAnswers[idx];
+                    const isCorrect = Array.isArray(q.answer) ? JSON.stringify(q.answer.sort()) === JSON.stringify((ans || []).sort()) : q.answer === ans;
+                    if (isCorrect) {
+                        score += q.score;
+                        correctCount++;
+                    }
+                }
+            });
+
+            const resultHtml = `
+            <div class="u2-score-hero">
+                <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Assessment Results</p>
+                <h1 class="u2-score-val">${score}</h1>
+                <p class="text-xs font-bold opacity-80">Objective Score Achieved</p>
+                <div class="flex justify-center gap-6 mt-6">
+                    <div>
+                        <p class="text-[9px] font-black uppercase opacity-60">Accuracy</p>
+                        <p class="text-sm font-black">${Math.round((correctCount / (quizData.length - pendingCount)) * 100)}%</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black uppercase opacity-60">Pending</p>
+                        <p class="text-sm font-black">${pendingCount} Voice</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5">
+                <div class="u2-analysis-card">
+                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <i class="fas fa-robot text-indigo-600"></i> AI Growth Coach
+                    </h3>
+                    <p class="text-[11px] font-medium text-gray-600 leading-relaxed">
+                        Great progress, Alex! Your product knowledge is <span class="text-indigo-600 font-bold">Excellent</span>. Focus more on objection handling in video scenarios. Your voice roleplay will be reviewed by Mentor Echo within 12h.
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-between mb-4 mt-6">
+                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Answer Review</h3>
+                    <div class="flex gap-2">
+                        <span class="text-[9px] font-black bg-green-50 text-green-600 px-1.5 py-0.5 rounded">PASSED</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    ${quizData.map((q, i) => buildReviewItem(q, i)).join('')}
+                </div>
+
+                <button class="w-full py-4 mt-8 rounded-2xl bg-indigo-600 text-white font-black text-sm uppercase tracking-wider" onclick="location.reload()">
+                    Try Again
+                </button>
+            </div>
+            `;
+            main.innerHTML = resultHtml;
+        }
+
+        function buildReviewItem(q, idx) {
+            const ans = userAnswers[idx];
+            let status = 'wrong';
+            let label = "Review";
+            if (q.type === 'voice') {
+                status = 'pending';
+                label = "Ungraded";
+            } else {
+                const isCorrect = Array.isArray(q.answer) ? JSON.stringify(q.answer.sort()) === JSON.stringify((ans || []).sort()) : q.answer === ans;
+                if (isCorrect) {
+                    status = 'correct';
+                    label = "Correct";
+                }
+            }
+
+            return `
+            <div class="u2-review-item ${status}">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Question #0${idx + 1}</span>
+                    <span class="text-[9px] font-black ${status === 'correct' ? 'text-green-600' : status === 'pending' ? 'text-orange-600' : 'text-red-600'} uppercase">${label}</span>
+                </div>
+                <p class="text-xs font-black text-gray-900 leading-tight mb-2">${q.question}</p>
+                <p class="text-[10px] font-semibold text-gray-500">Tip: ${q.type === 'voice' ? 'Key point: Acknowledge and compare specs.' : 'Focus on FAB alignment for high conversion.'}</p>
+            </div>`;
+        }
+
+        window.onload = () => {
+            renderQuestion();
+            startTimer();
+        };
+    </script>
+</body>
+
+</html>

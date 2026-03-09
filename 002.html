@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>销售培训系统 - 重构版</title>
+    <!-- 引入 Tailwind CSS 用于快速构建现代界面 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../ui-skills.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 隐藏滚动条，保持手机端清爽 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body {
+            background-color: var(--grey-bg);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .phone-container {
+            background-color: var(--yellow-bg);
+            min-height: 100vh;
+            /* 适配刘海屏和底部黑线 */
+            padding-bottom: env(safe-area-inset-bottom, 80px);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- 模拟手机屏幕外框 -->
+    <div class="max-w-md mx-auto phone-container relative shadow-2xl overflow-hidden">
+
+        <!-- 头部：个人信息 -->
+        <header
+            class="flex justify-between items-center px-6 py-6 pt-10 bg-white rounded-b-3xl shadow-sm relative z-10 transition-all">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <img src="https://ui-avatars.com/api/?name=Alex&background=f3e8ff&color=7c3aed&rounded=true"
+                        alt="Avatar" class="w-12 h-12 rounded-full border border-gray-100 shadow-sm">
+                    <div class="absolute bottom-0 right-0 bg-green-500 w-3.5 h-3.5 rounded-full border-2 border-white">
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-[19px] font-bold text-gray-900 leading-tight">Hi, Alex!</h1>
+                    <p class="text-xs text-gray-500 mt-0.5 font-medium">Let's level up today ✨</p>
+                </div>
+            </div>
+            <div
+                class="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center">
+                <span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Points</span>
+                <span class="text-sm font-bold text-indigo-600 leading-none">1,240 <span
+                        class="text-[9px] text-orange-500 ml-0.5">+XP</span></span>
+            </div>
+        </header>
+
+        <main class="px-5 pt-6 pb-24">
+            <!-- 模块一：今日必修 -->
+            <section class="mb-8">
+                <div class="flex justify-between items-end mb-4 px-1">
+                    <h2 class="text-[17px] font-bold text-gray-900">
+                        Today's Mission
+                    </h2>
+                    <span
+                        class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Required</span>
+                </div>
+
+                <!-- 使用 ui-skills 的 task-item 样式 -->
+                <div class="task-item">
+                    <div class="btn-icon-sq" style="background: var(--purple-bg); color: var(--purple-main);">
+                        <i class="fas fa-robot text-lg"></i>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name">Morning Greeting Drill</h3>
+                        <div class="task-sub">
+                            <span class="xp-pill" style="background: #ffedd5; color: #ea580c;">+100 XP</span>
+                            <span>• 5 mins</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-practice-main" style="height: 36px; padding: 0 16px; font-size: 13px;">
+                        GO <i class="fas fa-chevron-right ml-1 text-[10px]"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 模块二：业绩赋能推荐 -->
+            <section class="mb-8">
+                <div class="flex justify-between items-end mb-4 px-1">
+                    <h2 class="text-[17px] font-bold text-gray-900">
+                        Top Picks for You
+                    </h2>
+                    <a href="#" class="text-xs font-semibold text-gray-400 hover:text-purple-600">View All</a>
+                </div>
+
+                <!-- 场景卡片横向滑动 -->
+                <div class="flex gap-4 overflow-x-auto pb-4 -mx-5 px-5 select-none hide-scrollbar">
+
+                    <!-- 卡片1：价格异议 -->
+                    <div
+                        class="min-w-[260px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex-shrink-0 relative overflow-hidden transition-transform hover:-translate-y-1">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -z-0"></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="inline-block px-2 py-1 bg-red-50 text-red-600 rounded text-[10px] font-bold mb-3">
+                                ⚠️ Success Rate: 45%
+                            </div>
+                            <h3 class="text-[17px] font-bold text-gray-900 leading-snug mb-2">Handle "Too
+                                Expensive"<br>Like a Pro</h3>
+                            <p class="text-[13px] text-gray-500 mb-5 leading-relaxed">Master the "Feel-Felt-Found"
+                                technique with video + roleplay.</p>
+
+                            <button
+                                class="w-full bg-purple-600 text-white text-[13px] font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition hover:bg-purple-700 shadow-sm">
+                                START TRAINING
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 卡片2：陈列规范 -->
+                    <div
+                        class="min-w-[260px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex-shrink-0 relative overflow-hidden transition-transform hover:-translate-y-1">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full -z-0"></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="inline-block px-2 py-1 bg-orange-50 text-orange-600 rounded text-[10px] font-bold mb-3">
+                                📷 Store Standards
+                            </div>
+                            <h3 class="text-[17px] font-bold text-gray-900 leading-snug mb-2">Display Master:<br>Spot
+                                the Error</h3>
+                            <p class="text-[13px] text-gray-500 mb-5 leading-relaxed">Quick visual game to master our
+                                display guidelines.</p>
+
+                            <button
+                                class="w-full bg-orange-500 text-white text-[13px] font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition hover:bg-orange-600 shadow-sm">
+                                PLAY NOW
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 模块三：进阶挑战 -->
+            <section class="mb-4">
+                <h2 class="text-[15px] font-bold mb-3 px-1 text-gray-500">Locked Challenges</h2>
+
+                <div class="task-item locked">
+                    <div class="btn-icon-sq bg-gray-100 text-gray-400">
+                        <i class="fas fa-lock text-sm"></i>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name text-gray-500">Advanced Negotiation</h3>
+                        <div class="task-sub mt-1">
+                            <span class="lock-pill"><i class="fas fa-key text-[8px]"></i> Prerequisite Required</span>
+                        </div>
+                    </div>
+                    <div class="btn-check">
+                        <i class="fas fa-lock text-xs"></i>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部导航栏 -->
+        <nav
+            class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] bg-white/95 backdrop-blur-lg border border-gray-100 rounded-[28px] flex justify-between px-6 py-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] z-50">
+            <div class="flex flex-col items-center gap-1.5 text-purple-600 cursor-pointer w-12">
+                <i class="fas fa-home text-[20px]"></i>
+                <span class="text-[9px] font-bold">Home</span>
+            </div>
+            <div
+                class="flex flex-col items-center gap-1.5 text-gray-400 hover:text-purple-500 transition-colors cursor-pointer w-12">
+                <i class="fas fa-comment text-[20px]"></i>
+                <span class="text-[9px] font-bold">Chat</span>
+            </div>
+            <div
+                class="flex flex-col items-center gap-1.5 text-gray-400 hover:text-purple-500 transition-colors cursor-pointer w-12">
+                <i class="fas fa-chart-bar text-[20px]"></i>
+                <span class="text-[9px] font-bold">Data</span>
+            </div>
+            <div
+                class="flex flex-col items-center gap-1.5 text-gray-400 hover:text-purple-500 transition-colors cursor-pointer w-12">
+                <i class="fas fa-robot text-[20px]"></i>
+                <span class="text-[9px] font-bold">AI</span>
+            </div>
+        </nav>
+    </div>
+
+</body>
+
+</html>

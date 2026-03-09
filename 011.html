@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Sales Coach - Audio Lesson</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+    <link rel="stylesheet" href="../exam-skills.css">
+    <style>
+        .u2-body {
+            background: #fff;
+        }
+
+        /* Podcast Specific Player */
+        .u2-podcast-hero {
+            padding: 2.5rem 1.5rem 1.5rem;
+            background: linear-gradient(180deg, #F5F3FF 0%, #FFFFFF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .u2-cover-wrapper {
+            width: 180px;
+            height: 180px;
+            border-radius: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 4px solid white;
+        }
+
+        .u2-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .playing .u2-cover-img {
+            animation: rotateSlow 20s linear infinite;
+        }
+
+        @keyframes rotateSlow {
+            from {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            to {
+                transform: rotate(360deg) scale(1.1);
+            }
+        }
+
+        .u2-progress-rail {
+            width: 100%;
+            height: 4px;
+            background: #F3F4F6;
+            border-radius: 9999px;
+            margin: 1.5rem 0 0.5rem;
+            position: relative;
+        }
+
+        .u2-progress-fill {
+            height: 100%;
+            background: var(--primary-purple);
+            border-radius: 9999px;
+            width: 35%;
+        }
+
+        .u2-progress-knob {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid var(--primary-purple);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 35%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tabs */
+        .u2-tab-row {
+            display: flex;
+            padding: 0 1rem;
+            border-bottom: 1px solid var(--card-border);
+            margin-top: 1rem;
+        }
+
+        .u2-tab {
+            flex: 1;
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .u2-tab.active {
+            color: var(--text-main);
+        }
+
+        .u2-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2rem;
+            height: 2px;
+            background: var(--primary-purple);
+        }
+
+        /* Transcript */
+        .u2-transcript-container {
+            padding: 1.5rem;
+        }
+
+        .u2-transcript-line {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.6;
+            transition: all 0.3s;
+        }
+
+        .u2-transcript-line.active {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        .u2-timestamp {
+            font-size: 0.625rem;
+            font-weight: 800;
+            color: var(--primary-purple);
+            background: #EEF2FF;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            height: fit-content;
+        }
+
+        .u2-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* Floating Back */
+        .u2-top-bar {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            z-index: 110;
+        }
+
+        .u2-back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body class="u2-body showcase-body playing">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper" id="phone-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div class="time" id="currentTime">9:41</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+
+            <!-- Top Header Action -->
+            <div class="u2-top-bar">
+                <a href="014.html" class="u2-back-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </div>
+
+            <!-- Scrollable Content Wrapper -->
+            <div class="w-full h-full flex flex-col overflow-hidden bg-white">
+                <div class="flex-grow overflow-y-auto pb-32">
+
+                    <!-- 1. Premium Player Hero -->
+                    <div class="u2-podcast-hero">
+                        <div class="u2-cover-wrapper">
+                            <img src="https://i.postimg.cc/PxT2q4dK/播客.png" class="u2-cover-img" alt="Podcast Cover">
+                        </div>
+
+                        <div class="u2-badge !bg-indigo-50 !text-indigo-600 mb-2">AUDIO WORKSHOP</div>
+                        <h1 class="text-lg font-black text-gray-900 leading-tight mb-1">EP03: Design Pitch Scripts with
+                            AI</h1>
+                        <p class="text-[11px] text-gray-500 font-bold uppercase tracking-wider">With AI Sales Lab • Host
+                            Echo</p>
+
+                        <!-- Progress Section -->
+                        <div class="u2-progress-rail">
+                            <div class="u2-progress-fill"></div>
+                            <div class="u2-progress-knob"></div>
+                        </div>
+                        <div class="w-full flex justify-between text-[10px] font-black text-gray-400">
+                            <span>04:12</span>
+                            <span>12:45</span>
+                        </div>
+
+                        <!-- Modern Controls -->
+                        <div class="flex items-center gap-10 mt-6">
+                            <button class="text-gray-300 hover:text-gray-900 transition-colors"><i
+                                    class="fas fa-undo-alt text-xl"></i></button>
+                            <button
+                                class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl shadow-xl shadow-indigo-200"
+                                id="playBtn" onclick="togglePlay()">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="text-gray-300 hover:text-gray-900 transition-colors"><i
+                                    class="fas fa-redo-alt text-xl"></i></button>
+                        </div>
+
+                        <div class="flex items-center gap-4 mt-8">
+                            <span
+                                class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded">1.25x</span>
+                            <span class="text-gray-200">|</span>
+                            <i class="fas fa-moon text-gray-300 text-sm"></i>
+                        </div>
+                    </div>
+
+                    <!-- 2. Interactive Tabs -->
+                    <div class="u2-tab-row">
+                        <div class="u2-tab" onclick="switchTab('list', this)">Episodes</div>
+                        <div class="u2-tab active" onclick="switchTab('transcript', this)">Transcript</div>
+                    </div>
+
+                    <!-- 3. Tab Content -->
+                    <div id="tab-transcript" class="tab-pane active">
+                        <div class="u2-transcript-container">
+                            <div class="u2-transcript-line">
+                                <span class="u2-timestamp">00:15</span>
+                                <p class="u2-text">Hi everyone, welcome back to AI Sales Lab. Today we're talking about
+                                    how to use AI to design pitch scripts...</p>
+                            </div>
+                            <div class="u2-transcript-line active">
+                                <span class="u2-timestamp">00:45</span>
+                                <p class="u2-text">Many salespeople open a blank note and stare at it. With AI, you
+                                    start from a solid first draft and then tweak the wording to match your style.</p>
+                            </div>
+                            <div class="u2-transcript-line">
+                                <span class="u2-timestamp">01:20</span>
+                                <p class="u2-text">Step one: give AI a clear role. For example, “You are a mobile retail
+                                    sales expert in Africa, help me write a pitch script...”</p>
+                            </div>
+                            <div class="u2-transcript-line text-center py-4">
+                                <i class="fas fa-ellipsis-h text-gray-200"></i>
+                            </div>
+                            <div class="u2-transcript-line">
+                                <span class="u2-timestamp">04:00</span>
+                                <p class="u2-text">Finally, take the AI script and read it out loud. Mark the parts that
+                                    feel natural and adjust the rest—this is how AI becomes your assistant.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-list" class="tab-pane hidden px-5 pt-6">
+                        <div class="u2-list-container">
+                            <div class="u2-list-card">
+                                <div class="u2-thumb-wrapper">
+                                    <img src="https://i.postimg.cc/PxT2q4dK/播客.png" class="u2-thumb-img">
+                                    <div class="u2-thumb-overlay"><i class="fas fa-check text-white text-xs"></i></div>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="u2-title">EP03: Design Pitch Scripts</h4>
+                                    <p class="u2-subtitle">12:45 • Playing now</p>
+                                </div>
+                                <div class="u2-tag-btn u2-tag-purple">Playing</div>
+                            </div>
+                            <div class="u2-list-card">
+                                <div class="u2-thumb-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=100&q=80"
+                                        class="u2-thumb-img">
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="u2-title">EP02: Product Sheets to Stories</h4>
+                                    <p class="u2-subtitle">08:30 • Completed</p>
+                                </div>
+                                <div class="u2-tag-btn u2-tag-orange">Review</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function togglePlay() {
+            const btn = document.getElementById('playBtn');
+            const body = document.body;
+            if (body.classList.contains('playing')) {
+                body.classList.remove('playing');
+                btn.innerHTML = '<i class="fas fa-play ml-1"></i>';
+            } else {
+                body.classList.add('playing');
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.u2-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+        }
+    </script>
+    <script src="../exam-skills.js"></script>
+    <script>
+        initExamFab({
+            targetUrl: '018.html',
+            label: 'Post-Class Exam',
+            reward: '+200 XP',
+            containerId: 'phone-wrapper'
+        });
+    </script>
+</body>
+
+</html>

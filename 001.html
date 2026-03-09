@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DCR AI Study - TECNO学习中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../ui-skills.css">
+    <style>
+        :root {
+            --color-primary: #7C3AED;
+            /* Purple from ui-skills */
+            --color-primary-light: #F3E8FF;
+            --color-black: #1F2937;
+            --bg-white: #FFFFFF;
+            --bg-light: #F8FAFC;
+            --bg-yellow: #FFF7ED;
+            /* Yellow from ui-skills */
+            --text-main: #1F2937;
+            --text-sub: #6B7280;
+            --text-muted: #9CA3AF;
+            --text-white: #FFFFFF;
+            --border-color: #F1F5F9;
+            --accent-orange: #FB923C;
+            --accent-green: #16A34A;
+            --accent-red: #EF4444;
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* 移除远程 Inter 字体，使用系统字体以提升加载速度 */
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            background: var(--bg-white);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        /* 顶部导航 */
+        .header {
+            background: var(--bg-white);
+            padding: 4px 16px 8px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .header-tabs {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+        }
+
+        .header-tab {
+            border: none;
+            background: transparent;
+            padding: 2px 0;
+            cursor: pointer;
+            transition: color 0.2s ease, font-size 0.2s ease, transform 0.1s ease;
+        }
+
+        .header-tab.course {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .header-tab.task {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* 顶部分类 Tab（热门课程 / 热门直播课 / 热门任务） */
+        .category-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px 8px;
+        }
+
+        .category-tab {
+            flex: 1;
+            padding: 6px 0;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-sub);
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+        }
+
+        .category-tab.active {
+            background: var(--color-primary);
+            color: var(--text-white);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* 信息流提示文案 */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            font-size: 20px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        /* 顶部搜索入口（仅保留图标按钮） */
+        .search-toggle {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-toggle i {
+            font-size: 16px;
+            color: var(--text-sub);
+        }
+
+        .search-toggle:hover {
+            background: var(--color-primary-light);
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            padding: 16px;
+            background: var(--bg-yellow);
+            /* Yellow background from ui-skills .mobile-preview */
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            margin-top: -12px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-top: 8px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .section-more {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Banner */
+        .banner-carousel {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .banner-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .banner-slide {
+            min-width: 100%;
+            position: relative;
+            padding: 24px;
+            min-height: 180px;
+        }
+
+        .banner-slide.blue {
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+        }
+
+        .banner-slide.blue .banner-visual {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .banner-slide.blue .banner-visual i {
+            color: var(--color-primary);
+        }
+
+        .banner-slide.blue .banner-tag {
+            background: var(--color-primary);
+        }
+
+        .banner-slide.orange {
+            background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+        }
+
+        .banner-slide.orange .banner-visual {
+            background: rgba(251, 146, 35, 0.1);
+        }
+
+        .banner-slide.orange .banner-visual i {
+            color: var(--accent-orange);
+        }
+
+        .banner-slide.orange .banner-tag {
+            background: var(--accent-orange);
+        }
+
+        .banner-slide.green {
+            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+        }
+
+        .banner-slide.green .banner-visual {
+            background: rgba(22, 163, 74, 0.1);
+        }
+
+        .banner-slide.green .banner-visual i {
+            color: var(--accent-green);
+        }
+
+        .banner-slide.green .banner-tag {
+            background: var(--accent-green);
+        }
+
+        .banner-slide.purple {
+            background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+        }
+
+        .banner-slide.purple .banner-visual {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .banner-slide.purple .banner-visual i {
+            color: var(--color-primary);
+        }
+
+        .banner-slide.purple .banner-tag {
+            background: var(--color-primary);
+        }
+
+        .banner-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .banner-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .banner-subtitle {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .banner-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .banner-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .banner-visual {
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-visual i {
+            font-size: 50px;
+            opacity: 0.5;
+        }
+
+        .banner-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .banner-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .banner-dot.active {
+            width: 20px;
+            border-radius: 3px;
+            background: var(--color-primary);
+        }
+
+        /* Banner 上方的二级筛选 */
+        .banner-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 2px 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .banner-filter-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .banner-filter-group {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+        .banner-filter-pill {
+            border: none;
+            background: transparent;
+            padding: 2px 6px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.18s ease, background 0.18s ease, transform 0.1s ease;
+            position: relative;
+        }
+
+        .banner-filter-pill.active {
+            background: var(--color-primary);
+            color: var(--text-white);
+            transform: translateY(-1px);
+            font-weight: 700;
+        }
+
+        .banner-filter-pill .filter-fold-icon {
+            margin-left: 4px;
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .filter-icon-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filter-tooltip {
+            position: absolute;
+            bottom: 140%;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: rgba(0, 0, 0, 0.82);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            z-index: 10;
+        }
+
+        .filter-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 4px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.82) transparent transparent transparent;
+        }
+
+        .filter-tooltip.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* 原待办样式保留备选，当前信息流不再渲染待办列表 */
+
+        /* 课程 */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .course-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary-light);
+        }
+
+        .course-card-cover {
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card-cover.theme-blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .course-card-cover.theme-red {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .course-card-cover.theme-orange {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .course-card-cover.theme-green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .course-card-cover.theme-purple {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .course-card-cover.theme-dark {
+            background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        }
+
+        .course-cover-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .course-cover-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .course-cover-deco {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .course-cover-deco.deco-1 {
+            width: 80px;
+            height: 80px;
+            top: -20px;
+            right: -20px;
+        }
+
+        .course-cover-deco.deco-2 {
+            width: 50px;
+            height: 50px;
+            bottom: -15px;
+            left: -15px;
+        }
+
+        .course-card-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 8px;
+            /* Matching xp-pill vibe */
+            color: white;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 3;
+            text-transform: uppercase;
+        }
+
+        .course-card-tag.live {
+            background: var(--accent-red);
+        }
+
+        .course-card-tag.hot {
+            background: var(--accent-orange);
+        }
+
+        .course-card-tag.new {
+            background: var(--accent-green);
+        }
+
+        .course-card-tag.must {
+            background: var(--color-primary);
+        }
+
+        .course-card-info {
+            padding: 12px;
+        }
+
+        .course-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 40px;
+        }
+
+        .course-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .course-card-like {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--accent-red);
+        }
+
+        .course-card-like i {
+            font-size: 12px;
+        }
+
+        /* 悬浮数字人入口 */
+        .floating-agent {
+            position: fixed;
+            right: 16px;
+            bottom: 110px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px 10px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 999px;
+            border: 1px solid var(--color-primary-light);
+            box-shadow: 0 14px 30px rgba(124, 58, 237, 0.15);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            cursor: pointer;
+            touch-action: none;
+            transition: all 0.2s ease;
+        }
+
+        /* 折叠态：仅头像圆形悬浮球 */
+        .floating-agent.collapsed {
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+        }
+
+        .floating-agent.collapsed .floating-agent-text {
+            display: none;
+        }
+
+        .floating-agent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+            background: linear-gradient(135deg, rgba(0, 87, 227, 0.1), rgba(255, 255, 255, 1));
+        }
+
+        .floating-agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            background: radial-gradient(circle at 30% 20%, #ffffff 0%, #d6e4ff 45%, #a4b8ff 100%);
+        }
+
+        .floating-agent-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FF3B30;
+            border: 2px solid #FFFFFF;
+        }
+
+        .floating-agent-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .floating-agent-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-primary);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <span class="time">09:41</span>
+            <div class="icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-row">
+                <div class="header-tabs">
+                    <button class="header-tab course" data-tab="course">课程</button>
+                    <button class="header-tab task" data-tab="task">任务</button>
+                </div>
+                <div class="header-actions flex-center">
+                    <button class="search-toggle" id="searchToggle">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="移动端_赚积分.html" class="header-btn points-btn new-style">
+                        <span class="points-icon">💎</span>
+                        <span class="points-text">
+                            <span class="points-label">赚积分</span>
+                            <span class="points-value">520</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <style>
+            .header-actions.flex-center {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                justify-content: flex-end;
+            }
+
+            .header-btn.points-btn.new-style {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 14px;
+                width: auto;
+                min-width: 96px;
+                flex-shrink: 0;
+                height: 40px;
+                background: linear-gradient(135deg, var(--color-primary) 0%, #8B5CF6 100%);
+                border: none;
+                border-radius: 12px;
+                color: #FFFFFF;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            }
+
+            .header-btn.points-btn.new-style:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+                background: linear-gradient(135deg, #8B5CF6 0%, var(--color-primary) 100%);
+            }
+
+            .points-icon {
+                font-size: 18px;
+                line-height: 1;
+            }
+
+            .points-text {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                line-height: 1.1;
+            }
+
+            .points-label {
+                font-size: 12px;
+                font-weight: 500;
+                opacity: 0.9;
+            }
+
+            .points-value {
+                font-size: 14px;
+                font-weight: 700;
+            }
+        </style>
+        <script>
+            // 搜索入口 & 顶部 tab 交互
+            document.addEventListener('DOMContentLoaded', function () {
+                const searchToggle = document.getElementById('searchToggle');
+
+                if (searchToggle) {
+                    searchToggle.addEventListener('click', function () {
+                        window.location.href = '移动端_原Echo列表.html';
+                    });
+                }
+
+                // 顶部 Tab：课程 / 任务 —— 跳转到各自列表页
+                const headerTabs = document.querySelectorAll('.header-tabs .header-tab');
+                const tabToPage = {
+                    'course': '移动端_DCR_AI Study_热门课程.html',
+                    'task': '移动端_DCR_AI Study_小蓝书_热门任务_echo.html'
+                };
+                headerTabs.forEach(function (tab) {
+                    tab.addEventListener('click', function () {
+                        const key = tab.dataset.tab;
+                        if (tabToPage[key]) {
+                            window.location.href = tabToPage[key];
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部 Banner -->
+            <section class="section">
+                <div class="banner-carousel">
+                    <div class="banner-track" id="bannerTrack">
+                        <div class="banner-slide blue">
+                            <span class="banner-tag">New Release</span>
+                            <h2 class="banner-title">CAMON 40 Series<br>产品培训</h2>
+                            <p class="banner-subtitle">掌握核心卖点，提升销售转化</p>
+                            <div class="banner-meta">
+                                <span><i class="fas fa-users"></i> 4.2万人</span>
+                                <span><i class="far fa-clock"></i> 45分钟</span>
+                            </div>
+                            <div class="banner-visual"><i class="fas fa-mobile-alt"></i></div>
+                        </div>
+                        <div class="banner-slide orange">
+                            <span class="banner-tag">Hot</span>
+                            <h2 class="banner-title">金牌销售<br>话术特训营</h2>
+                            <p class="banner-subtitle">提升成交率，突破业绩目标</p>
+                            <div class="banner-meta">
+                                <span><i class="fas fa-users"></i> 2.8万人</span>
+                                <span><i class="far fa-clock"></i> 60分钟</span>
+                            </div>
+                            <div class="banner-visual"><i class="fas fa-comments"></i></div>
+                        </div>
+                        <div class="banner-slide green">
+                            <span class="banner-tag">Live</span>
+                            <h2 class="banner-title">SPARK 40系列<br>新品发布会</h2>
+                            <p class="banner-subtitle">直播互动，抢先了解新品亮点</p>
+                            <div class="banner-meta">
+                                <span><i class="fas fa-users"></i> 1.5万人</span>
+                                <span><i class="far fa-calendar"></i> 02-18 14:00</span>
+                            </div>
+                            <div class="banner-visual"><i class="fas fa-broadcast-tower"></i></div>
+                        </div>
+                        <div class="banner-slide purple">
+                            <span class="banner-tag">必修</span>
+                            <h2 class="banner-title">竞品对比分析<br>实战指南</h2>
+                            <p class="banner-subtitle">知己知彼，赢得客户信任</p>
+                            <div class="banner-meta">
+                                <span><i class="fas fa-users"></i> 3.6万人</span>
+                                <span><i class="far fa-clock"></i> 30分钟</span>
+                            </div>
+                            <div class="banner-visual"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-dots">
+                    <span class="banner-dot active" data-index="0"></span>
+                    <span class="banner-dot" data-index="1"></span>
+                    <span class="banner-dot" data-index="2"></span>
+                    <span class="banner-dot" data-index="3"></span>
+                </div>
+            </section>
+
+            <!-- Banner 下方二级筛选 -->
+            <div class="banner-filter-bar">
+                <div class="banner-filter-group" id="bannerFilter">
+                    <button class="banner-filter-pill active" data-filter="all">
+                        AI推荐
+                        <span class="filter-icon-wrap">
+                            <i class="fas fa-circle-exclamation filter-fold-icon" id="aiExplainIcon"></i>
+                            <span class="filter-tooltip" id="aiExplainTooltip">AI基于您的特征推荐</span>
+                        </span>
+                    </button>
+                    <button class="banner-filter-pill" data-filter="podcast">必修</button>
+                    <button class="banner-filter-pill" data-filter="must">初级</button>
+                    <button class="banner-filter-pill" data-filter="advance">进阶</button>
+                    <button class="banner-filter-pill" data-filter="live">高阶</button>
+                </div>
+            </div>
+
+            <!-- 课程信息流（双列） -->
+            <section class="section">
+                <div class="course-grid">
+                    <a href="#" class="course-card" data-tag="live">
+                        <div class="course-card-cover theme-red">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-video"></i></div>
+                            <span class="course-card-tag live">直播</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">CAMON 40新品发布会直播培训</div>
+                            <div class="course-card-meta">
+                                <span>1.2万人学习 · 02-16</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 262</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="hot">
+                        <div class="course-card-cover theme-orange">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-bullseye"></i></div>
+                            <span class="course-card-tag hot">热门</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">MA平台使用入门教程</div>
+                            <div class="course-card-meta">
+                                <span>8560人学习 · 02-10</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 405</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="new">
+                        <div class="course-card-cover theme-green">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-building"></i></div>
+                            <span class="course-card-tag new">新课</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">消费者业务部门介绍</div>
+                            <div class="course-card-meta">
+                                <span>4200人学习 · 02-08</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 180</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="must">
+                        <div class="course-card-cover theme-blue">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-user-tie"></i></div>
+                            <span class="course-card-tag must">必修</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">培训代表角色认知与职责</div>
+                            <div class="course-card-meta">
+                                <span>3100人学习 · 02-05</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 128</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="hot">
+                        <div class="course-card-cover theme-purple">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-lightbulb"></i></div>
+                            <span class="course-card-tag hot">热门</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">门店陈列创意案例合集</div>
+                            <div class="course-card-meta">
+                                <span>7800人学习 · 02-02</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 320</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="advance">
+                        <div class="course-card-cover theme-dark">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-chart-line"></i></div>
+                            <span class="course-card-tag must">进阶</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">销量数据分析与日报解读</div>
+                            <div class="course-card-meta">
+                                <span>6500人学习 · 01-28</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 289</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="live">
+                        <div class="course-card-cover theme-red">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-microphone-alt"></i></div>
+                            <span class="course-card-tag live">直播</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">新品话术直播复盘精讲</div>
+                            <div class="course-card-meta">
+                                <span>5200人学习 · 01-25</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 231</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="course-card" data-tag="new">
+                        <div class="course-card-cover theme-green">
+                            <span class="course-cover-deco deco-1"></span>
+                            <span class="course-cover-deco deco-2"></span>
+                            <div class="course-cover-icon"><i class="fas fa-smile-beam"></i></div>
+                            <span class="course-card-tag new">新课</span>
+                        </div>
+                        <div class="course-card-info">
+                            <div class="course-card-title">高情商沟通：和顾客快速破冰</div>
+                            <div class="course-card-meta">
+                                <span>4300人学习 · 01-20</span>
+                                <span class="course-card-like"><i class="fas fa-heart"></i> 198</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 悬浮数字人入口（全局可拖拽，与 悬浮入口 交互一致） -->
+    <div class="floating-agent collapsed" id="floatingAgent">
+        <div class="floating-agent-avatar">
+            <img src="https://i.postimg.cc/yxdf8L2M/Echo-2x.png" alt="数字人助手">
+            <span class="floating-agent-badge" id="floatingAgentBadge"></span>
+        </div>
+        <div class="floating-agent-text">你有2个任务待完成</div>
+    </div>
+
+    <!-- 底部导航（公共组件，保留入口页的工具栏） -->
+    <div id="bottom-nav-container"></div>
+    <link rel="stylesheet" href="components/bottom-nav.css">
+    <script src="components/bottom-nav.js"></script>
+
+    <script>
+        // Banner 轮播（当前页面无 Banner，占位兼容：仅在元素存在时启用）
+        const bannerTrack = document.getElementById('bannerTrack');
+        const bannerDots = document.querySelectorAll('.banner-dot');
+        if (bannerTrack && bannerDots.length) {
+            let currentBanner = 0;
+            const totalBanners = 4;
+            function goToBanner(index) {
+                currentBanner = index;
+                bannerTrack.style.transform = 'translateX(-' + currentBanner * 100 + '%)';
+                bannerDots.forEach(function (dot, i) {
+                    dot.classList.toggle('active', i === currentBanner);
+                });
+            }
+            function nextBanner() {
+                currentBanner = (currentBanner + 1) % totalBanners;
+                goToBanner(currentBanner);
+            }
+            var autoPlay = setInterval(nextBanner, 4000);
+            bannerDots.forEach(function (dot, index) {
+                dot.addEventListener('click', function () {
+                    clearInterval(autoPlay);
+                    goToBanner(index);
+                    autoPlay = setInterval(nextBanner, 4000);
+                });
+            });
+            var startX = 0;
+            bannerTrack.addEventListener('touchstart', function (e) {
+                startX = e.touches[0].clientX;
+                clearInterval(autoPlay);
+            });
+            bannerTrack.addEventListener('touchend', function (e) {
+                var endX = e.changedTouches[0].clientX;
+                var diff = startX - endX;
+                if (Math.abs(diff) > 50) {
+                    currentBanner = diff > 0 ? (currentBanner + 1) % totalBanners : (currentBanner - 1 + totalBanners) % totalBanners;
+                    goToBanner(currentBanner);
+                }
+                autoPlay = setInterval(nextBanner, 4000);
+            });
+        }
+
+        // 待办标签切换（当前页面已移除待办，仅兼容保留）
+        var todoTabs = document.querySelectorAll('.todo-tab');
+        if (todoTabs.length) {
+            todoTabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    todoTabs.forEach(function (t) { t.classList.remove('active'); });
+                    tab.classList.add('active');
+                });
+            });
+        }
+
+        // 课程信息流：当前页面直接渲染 8 条课程卡片（双列布局），滚动仅用于浏览
+
+        // Banner 上方二级筛选：根据标签筛选下方课程卡片
+        (function () {
+            var filterContainer = document.getElementById('bannerFilter');
+            if (!filterContainer) return;
+
+            var pills = filterContainer.querySelectorAll('.banner-filter-pill');
+            var cards = document.querySelectorAll('.course-grid .course-card');
+
+            function applyFilter(key) {
+                cards.forEach(function (card) {
+                    var tag = card.getAttribute('data-tag');
+                    if (key === 'all' || !key) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = (tag === key) ? '' : 'none';
+                    }
+                });
+            }
+
+            pills.forEach(function (pill) {
+                pill.addEventListener('click', function () {
+                    pills.forEach(function (p) { p.classList.remove('active'); });
+                    pill.classList.add('active');
+                    var key = pill.getAttribute('data-filter');
+                    applyFilter(key);
+                });
+            });
+
+            // AI推荐感叹号说明气泡
+            var aiIcon = document.getElementById('aiExplainIcon');
+            var tooltip = document.getElementById('aiExplainTooltip');
+            if (aiIcon && tooltip) {
+                aiIcon.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var isVisible = tooltip.classList.contains('visible');
+                    if (isVisible) {
+                        tooltip.classList.remove('visible');
+                    } else {
+                        tooltip.classList.add('visible');
+                    }
+                });
+                // 点击其它区域关闭提示
+                document.addEventListener('click', function () {
+                    tooltip.classList.remove('visible');
+                });
+                // 点击气泡本身不关闭（避免抖动）
+                tooltip.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+        })();
+
+        // 悬浮数字人入口拖拽与展开/折叠交互（复用 悬浮入口 页逻辑）
+        (function () {
+            var agent = document.getElementById('floatingAgent');
+            if (!agent) return;
+
+            var isDragging = false;
+            var isExpanded = false;
+            var offsetX = 0;
+            var offsetY = 0;
+
+            function onPointerDown(e) {
+                isDragging = true;
+                var rect = agent.getBoundingClientRect();
+                var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                offsetX = clientX - rect.left;
+                offsetY = clientY - rect.top;
+                // 切换为 left/top 布局
+                agent.style.left = rect.left + 'px';
+                agent.style.top = rect.top + 'px';
+                agent.style.right = 'auto';
+                agent.style.bottom = 'auto';
+                document.addEventListener('mousemove', onPointerMove);
+                document.addEventListener('mouseup', onPointerUp);
+                document.addEventListener('touchmove', onPointerMove, { passive: false });
+                document.addEventListener('touchend', onPointerUp);
+            }
+
+            function clampToViewport() {
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+                var rect = agent.getBoundingClientRect();
+                var maxLeft = vw - rect.width - 8;
+                var maxTop = vh - rect.height - 80; // 预留底部导航空间
+                var newLeft = rect.left;
+                var newTop = rect.top;
+                if (newLeft < 8) newLeft = 8;
+                if (newTop < 8) newTop = 8;
+                if (newLeft > maxLeft) newLeft = maxLeft;
+                if (newTop > maxTop) newTop = maxTop;
+                agent.style.left = newLeft + 'px';
+                agent.style.top = newTop + 'px';
+            }
+
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                if (e.cancelable) e.preventDefault();
+                var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                var newLeft = clientX - offsetX;
+                var newTop = clientY - offsetY;
+                agent.style.left = newLeft + 'px';
+                agent.style.top = newTop + 'px';
+                clampToViewport();
+            }
+
+            function onPointerUp() {
+                isDragging = false;
+                document.removeEventListener('mousemove', onPointerMove);
+                document.removeEventListener('mouseup', onPointerUp);
+                document.removeEventListener('touchmove', onPointerMove);
+                document.removeEventListener('touchend', onPointerUp);
+            }
+
+            agent.addEventListener('mousedown', onPointerDown);
+            agent.addEventListener('touchstart', onPointerDown, { passive: true });
+
+            // 点击：在「圆形头像」与「长条展示」之间切换
+            agent.addEventListener('click', function () {
+                // 拖拽结束瞬间也会触发 click，这里逻辑较轻量，影响可接受
+                isExpanded = !isExpanded;
+                agent.classList.toggle('collapsed', !isExpanded);
+                if (isExpanded) {
+                    clampToViewport();
+                }
+                var badge = document.getElementById('floatingAgentBadge');
+                if (isExpanded && badge) {
+                    badge.style.display = 'none'; // 展开后视为已查看，隐藏红点
+                }
+            });
+        })();
+
+        // 底部导航：AI Study 入口页使用的自定义项，当前高亮「AI助手」
+        document.addEventListener('DOMContentLoaded', function () {
+            initBottomNav('ai', {
+                customItems: [
+                    { id: 'home', icon: 'fas fa-home', label: '首页', href: '#' },
+                    { id: 'message', icon: 'fas fa-comment-dots', label: '消息', href: '#' },
+                    { id: 'sales', icon: 'fas fa-chart-line', label: '销售分析', href: '#' },
+                    { id: 'ai', icon: 'fas fa-robot', label: 'AI助手', href: '移动端_DCR_AI Study_入口.html' },
+                    { id: 'profile', icon: 'fas fa-user', label: '我的', href: '#' }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>

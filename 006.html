@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist UI - Premium Content List</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills.css">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+    <!-- Common Bottom Nav Component Styles -->
+    <link rel="stylesheet" href="../components/bottom-nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Override for Showcase Frame */
+        .mobile-wrapper .bottom-nav {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 20px;
+            /* Room for home-indicator */
+        }
+
+        /* Custom spacing for the center AI button in the showcase frame */
+        .mobile-wrapper .nav-item.create-btn .nav-icon-wrapper {
+            margin-top: -24px;
+        }
+    </style>
+</head>
+
+<body class="showcase-body u2-body">
+
+    <!-- Showcase Skills Frame -->
+    <div class="device-bezel">
+        <div class="mobile-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="status-icons">
+                    <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+                        <path d="M1 9.5h1.5v-1H1v1zm3-2h1.5v-3H4v3zm3-2h1.5v-5H7v5zm3-2h1.5v-7H10v7z" />
+                    </svg>
+                    <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor">
+                        <path
+                            d="M7.5 11c-1.8 0-3.4-.6-4.7-1.6L0 6.6C2 4.4 4.6 3.2 7.5 3.2s5.5 1.2 7.5 3.4l-2.8 2.8c-1.3-1-2.9-1.6-4.7-1.6z" />
+                    </svg>
+                    <svg width="22" height="11" viewBox="0 0 22 11" fill="none" stroke="currentColor"
+                        stroke-width="1.2">
+                        <rect x="0.6" y="0.6" width="18.8" height="9.8" rx="2.5" />
+                        <path d="M20.5 3.5v4" stroke-linecap="round" />
+                        <rect x="2" y="2" width="14" height="7" rx="1" fill="currentColor" stroke="none" />
+                    </svg>
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+
+            <div class="content-scroll">
+
+                <!-- Header: AI + Knowledge Co-creation -->
+                <header class="flex justify-between items-center px-6 pt-12 pb-6">
+                    <div class="flex items-center gap-3">
+                        <img src="https://ui-avatars.com/api/?name=Alex&background=E2E8F0&color=475569&rounded=true"
+                            alt="Avatar" class="w-11 h-11 rounded-full border-2 border-white shadow-sm">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium tracking-wide">HELLO,</p>
+                            <h1 class="text-lg font-bold">Alex Snow</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+
+                        <a href="012.html"
+                            class="relative flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100 hover:bg-indigo-100 transition-colors group">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span
+                                class="absolute -top-1.5 -right-2.5 bg-gradient-to-r from-orange-400 to-orange-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-sm border-[1.5px] border-[#F8F9FA] transform rotate-6 group-hover:rotate-0 transition-transform">
+                                +XP
+                            </span>
+                        </a>
+                    </div>
+                </header>
+
+                <main>
+                    <!-- Priority Phase: Today's Mission -->
+                    <section class="u2-hero-card mx-6 mb-8">
+                        <div
+                            class="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-40 rounded-full blur-3xl pointer-events-none">
+                        </div>
+
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="u2-hero-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg>
+                                <span>Mandatory</span>
+                            </div>
+                            <span class="text-xs font-bold text-indigo-400 bg-white/60 px-2 py-1 rounded-md">0 / 2
+                                Done</span>
+                        </div>
+
+                        <h2 class="text-3xl font-black tracking-tight leading-none mb-1 text-gray-900">Daily Routine
+                        </h2>
+                        <p class="text-sm font-medium text-gray-500 mb-5">Assigned by Store Manager • Est. 8 mins</p>
+
+                        <div class="flex flex-col gap-2 mb-6">
+                            <div class="u2-glass-item">
+                                <div class="w-5 h-5 rounded-full border-2 border-indigo-200 flex-shrink-0"></div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">Morning Pitch Drill</p>
+                                    <p class="text-[10px] text-gray-500 font-medium">Simulation • 5 mins</p>
+                                </div>
+                            </div>
+                            <div class="u2-glass-item">
+                                <div class="w-5 h-5 rounded-full border-2 border-indigo-200 flex-shrink-0"></div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">New Display Policy Read</p>
+                                    <p class="text-[10px] text-gray-500 font-medium">Document • 3 mins</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="u2-btn-primary">
+                            Start Routine <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </section>
+
+                    <!-- Secondary Phase: Scenarios & Challenges -->
+                    <section class="mb-4">
+                        <div class="flex justify-between items-center mb-4 px-6">
+                            <h3 class="text-lg font-bold text-gray-900 tracking-tight">Scenario Challenges</h3>
+                            <a href="014.html"
+                                class="text-sm font-semibold text-[#4F46E5] hover:text-indigo-800 transition-colors">View
+                                All</a>
+                        </div>
+
+                        <!-- Content List -->
+                        <div class="u2-list-container px-6 pb-24">
+
+                            <!-- Item 1 -->
+                            <div class="u2-list-card">
+                                <div class="u2-thumb-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=200&q=80"
+                                        alt="Customer interaction" class="u2-thumb-img">
+                                    <div class="u2-thumb-overlay">
+                                        <div class="u2-play-icon">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="white" stroke="white"
+                                                stroke-width="2">
+                                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow py-1 pr-1">
+                                    <h4 class="u2-title">Customer says "Too Expensive"</h4>
+                                    <p class="u2-subtitle">Learn the "Feel-Felt-Found" technique & try it.</p>
+                                </div>
+                                <a href="007.html" class="u2-tag-btn u2-tag-purple">Start</a>
+                            </div>
+
+                            <!-- Item 2 -->
+                            <div class="u2-list-card">
+                                <div class="u2-thumb-wrapper">
+                                    <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=200&q=80"
+                                        alt="Retail Display" class="u2-thumb-img">
+                                    <div class="u2-thumb-overlay">
+                                        <div class="u2-play-icon">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white"
+                                                stroke-width="2.5">
+                                                <path
+                                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                                </path>
+                                                <circle cx="12" cy="13" r="4"></circle>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow py-1 pr-1">
+                                    <h4 class="u2-title">Messy Display Area</h4>
+                                    <p class="u2-subtitle">Standard display rules & spot the error game.</p>
+                                </div>
+                                <a href="008.html" class="u2-tag-btn u2-tag-orange">Fix It</a>
+                            </div>
+
+                            <!-- Item 3: Locked -->
+                            <div class="u2-locked-card">
+                                <div class="u2-lock-icon-box">
+                                    <svg class="text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="text-[13px] font-bold text-gray-500 mb-0.5">Advanced Negotiation</h4>
+                                    <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">
+                                        Unlock by completing<br>previous challenges</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                </main>
+            </div> <!-- end content-scroll -->
+
+            <!-- Bottom Nav Container (Dynamically rendered) -->
+            <div id="bottom-nav-container"></div>
+        </div> <!-- end mobile-wrapper -->
+    </div> <!-- end device-bezel -->
+
+    <!-- Bottom Nav Scripts -->
+    <script src="../components/bottom-nav.js"></script>
+    <script src="../components/bottom-nav-config-ai.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update AI Study config to include 'create' style center button for Echo
+            // This is a dynamic override to test the 'isCenter' functionality
+            BottomNavConfigAI.items.forEach(item => {
+                if (item.id === 'ai') item.isCenter = true;
+                // Map the user's specific files to the common nav
+                if (item.id === 'home') item.href = '015.html';
+            });
+
+            // Initialize with the AI Study items
+            initBottomNavAI('home');
+        });
+    </script>
+</body>
+
+</html>
+
+</html>

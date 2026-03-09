@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DCR Echo - FAB Mastery</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+    <link rel="stylesheet" href="../exam-skills.css">
+    <style>
+        /* --- 1. Background Scene (Inside Mobile Wrapper) --- */
+        .u2-scene-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .u2-scene-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85);
+            transition: transform 10s linear;
+        }
+
+        .u2-scene-container:hover .u2-scene-bg {
+            transform: scale(1.1);
+        }
+
+        /* Customer Avatar */
+        .u2-customer-figure {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 65%;
+            object-fit: contain;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+        }
+
+        /* Clue Markers */
+        .u2-clue {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: u2-pulse 2s infinite;
+        }
+
+        @keyframes u2-pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* --- 2. Theory Overlay (Knowledge Layer) --- */
+        .u2-overlay-knowledge {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 1;
+            transition: all 0.4s ease;
+        }
+
+        .u2-overlay-knowledge.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1);
+        }
+
+        .u2-theory-card {
+            background: #fff;
+            border-radius: 2.5rem;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .u2-theory-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: #EEF2FF;
+            border-radius: 1rem;
+            color: var(--primary-purple);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* --- 3. Interaction Drawer (Practice Layer) --- */
+        .u2-drawer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
+            padding: 60px 20px 40px;
+            z-index: 50;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .u2-drawer.active {
+            transform: translateY(0);
+        }
+
+        .u2-instruction {
+            color: #fff;
+            font-size: 1.125rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .u2-option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .u2-option-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .u2-option-card:active {
+            transform: scale(0.97);
+        }
+
+        .u2-option-card.correct {
+            border-color: #10B981;
+            background: #ECFDF5;
+        }
+
+        .u2-option-card.wrong {
+            border-color: #EF4444;
+            background: #FEF2F2;
+        }
+
+        /* --- 4. Feedback Bubble --- */
+        .u2-feedback-pop {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            right: 20px;
+            background: #fff;
+            padding: 1.25rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            z-index: 60;
+            display: flex;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .u2-feedback-pop.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .u2-echo-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #F5F3FF;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Header Overlays */
+        .u2-top-actions {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            z-index: 110;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .u2-back-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            pointer-events: auto;
+            transition: all 0.2s;
+        }
+
+        .u2-back-circle:active {
+            transform: scale(0.9);
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body class="u2-body showcase-body">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper" id="phone-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div class="time" id="currentTime">9:41</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+
+            <!-- Absolute Overlays -->
+            <div class="u2-top-actions">
+                <a href="014.html" class="u2-back-circle">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </div>
+
+            <!-- 1. Background Scene -->
+            <div class="u2-scene-container">
+                <img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?w=800&q=80" class="u2-scene-bg">
+
+                <!-- Customer Avatar -->
+                <img src="https://cdn-icons-png.flaticon.com/512/4825/4825038.png" class="u2-customer-figure"
+                    id="customer" style="filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));">
+
+                <!-- Clue Markers (Initially hidden) -->
+                <div id="clues" class="hidden">
+                    <div class="u2-clue" style="top: 38%; left: 32%;"><i class="fas fa-stopwatch"></i></div>
+                    <div class="u2-clue" style="top: 58%; left: 62%;"><i class="fas fa-running"></i></div>
+                </div>
+            </div>
+
+            <!-- 2. Knowledge Layer -->
+            <div class="u2-overlay-knowledge" id="knowledgeLayer">
+                <div class="u2-theory-card">
+                    <div class="u2-theory-icon"><i class="fas fa-bolt"></i></div>
+                    <h2 class="text-2xl font-black text-gray-900 mb-2">The FAB Formula</h2>
+                    <p class="text-sm text-gray-500 font-medium mb-6">Master the art of consultative selling</p>
+
+                    <div class="flex flex-col gap-3 mb-8 text-left">
+                        <div class="u2-hero-card !p-4 !rounded-2xl !bg-[#F9FAFB] !border-none">
+                            <div class="flex gap-4">
+                                <span
+                                    class="w-6 h-6 rounded-full bg-gray-900 text-white text-[10px] font-bold flex items-center justify-center shrink-0">F</span>
+                                <p class="text-[13px] leading-tight"><span
+                                        class="font-bold text-gray-900">Feature:</span> Product specs or components
+                                    (e.g. AI Chipset).</p>
+                            </div>
+                        </div>
+                        <div class="u2-hero-card !p-4 !rounded-2xl !bg-[#F9FAFB] !border-none">
+                            <div class="flex gap-4">
+                                <span
+                                    class="w-6 h-6 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0">A</span>
+                                <p class="text-[13px] leading-tight"><span
+                                        class="font-bold text-indigo-600">Advantage:</span> What the feature does (e.g.
+                                    Higher speed).</p>
+                            </div>
+                        </div>
+                        <div class="u2-hero-card !p-4 !rounded-2xl !bg-[#F9FAFB] !border-none">
+                            <div class="flex gap-4">
+                                <span
+                                    class="w-6 h-6 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">B</span>
+                                <p class="text-[13px] leading-tight"><span
+                                        class="font-bold text-orange-500">Benefit:</span> Why the customer cares (e.g.
+                                    Saves time).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="u2-btn-primary" onclick="startPractice()">
+                        Let's Practice <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Feedback Pop -->
+            <div class="u2-feedback-pop" id="feedback">
+                <div class="u2-echo-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Echo&background=F3F4F6&color=4F46E5&rounded=true"
+                        class="w-8 h-8">
+                </div>
+                <div>
+                    <h4 class="text-[13px] font-black" id="fbTitle">Excellent!</h4>
+                    <p class="text-[11px] text-gray-500 leading-tight mt-1" id="fbText">Correct observation. Match the
+                        sportswear to the health feature.</p>
+                </div>
+            </div>
+
+            <!-- 4. Practice Drawer -->
+            <div class="u2-drawer" id="practiceDrawer">
+                <h3 class="u2-instruction">Which FAB pitch fits this<br>active customer?</h3>
+
+                <div class="u2-option-list">
+                    <div class="u2-option-card" data-type="feature" onclick="checkAnswer(this, 'feature')">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">F
+                        </div>
+                        <span class="flex-1">"This watch has a Dual-Core Processor and 2GB RAM."</span>
+                    </div>
+
+                    <div class="u2-option-card" data-type="wrong" onclick="checkAnswer(this, 'wrong')">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">B
+                        </div>
+                        <span class="flex-1">"It looks very professional for your business meetings."</span>
+                    </div>
+
+                    <div class="u2-option-card" data-type="correct" onclick="checkAnswer(this, 'correct')">
+                        <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                            <i class="fas fa-heartbeat text-sm"></i>
+                        </div>
+                        <span class="flex-1">"Since you do sports, its Health AI tracks your recovery."</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function startPractice() {
+            document.getElementById('knowledgeLayer').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('practiceDrawer').classList.add('active');
+                document.getElementById('clues').classList.remove('hidden');
+                document.getElementById('clues').style.display = 'block';
+            }, 500);
+        }
+
+        function checkAnswer(el, status) {
+            const fb = document.getElementById('feedback');
+            const title = document.getElementById('fbTitle');
+            const text = document.getElementById('fbText');
+
+            // Reset
+            document.querySelectorAll('.u2-option-card').forEach(c => {
+                c.classList.remove('correct', 'wrong');
+                c.style.opacity = '0.5';
+            });
+            el.style.opacity = '1';
+
+            if (status === 'correct') {
+                el.classList.add('correct');
+                title.innerText = "Target Locked! 🎯";
+                title.style.color = "#059669";
+                text.innerHTML = "Perfect application of <b>FAB</b>! You connected his activity style to specific health benefits.";
+            } else if (status === 'feature') {
+                el.classList.add('wrong');
+                title.innerText = "Too Technical... 🤖";
+                title.style.color = "#E11D48";
+                text.innerText = "You only listed the Feature. Customers care about why it matters to THEM.";
+            } else {
+                el.classList.add('wrong');
+                title.innerText = "Wrong Context ❌";
+                title.style.color = "#E11D48";
+                text.innerText = "Good structure, but he's wearing sportswear, not a suit. Match the Benefit to the person.";
+            }
+
+            fb.classList.add('active');
+        }
+    </script>
+
+    <!-- Initialize Exam FAB -->
+    <script src="../exam-skills.js"></script>
+    <script>
+        initExamFab({
+            targetUrl: '018.html',
+            label: 'Post-Class Exam',
+            reward: '+200 XP',
+            containerId: 'phone-wrapper'
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Display Audit - AI Sales Coach</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+    <link rel="stylesheet" href="../exam-skills.css">
+    <style>
+        .u2-content-fixed {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: #F8F9FA;
+            padding-top: 44px;
+            /* Space for status bar */
+        }
+
+        /* --- Quiz Header Customization --- */
+        .quiz-header-u2 {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn-quiz {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #F3F4F6;
+            color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .back-btn-quiz:active {
+            transform: scale(0.9);
+        }
+
+        .progress-box {
+            flex: 1;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .progress-info span {
+            font-size: 11px;
+            font-weight: 800;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prog-track-u2 {
+            height: 6px;
+            background: #F1F5F9;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .prog-fill-u2 {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4F46E5, #818CF8);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* --- Interactive Stage --- */
+        .interactive-stage {
+            height: 38%;
+            position: relative;
+            background: #000;
+            margin: 15px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .stage-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        /* Hotspots */
+        .hotspot-u2 {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            transition: all 0.3s;
+            animation: pulse-ring-u2 2s infinite;
+        }
+
+        @keyframes pulse-ring-u2 {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(255, 255, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        .hotspot-u2.fixed {
+            border: none;
+            background: #10B981;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+            animation: pop-in-u2 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop-in-u2 {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Hotspot Locations */
+        .spot-1 {
+            top: 55%;
+            left: 15%;
+        }
+
+        .spot-2 {
+            top: 25%;
+            right: 20%;
+        }
+
+        .spot-3 {
+            top: 45%;
+            right: 40%;
+        }
+
+        .wrong-ripple {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #EF4444;
+            background: rgba(239, 68, 68, 0.2);
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple-u2 0.6s ease-out;
+        }
+
+        @keyframes ripple-u2 {
+            to {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* --- AI Feedback Modal --- */
+        .u2-modal-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 500;
+            /* Higher than interactives */
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Center for better focus */
+            align-items: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .u2-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .u2-learning-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 60px 24px 24px 24px;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .u2-modal-overlay.active .u2-learning-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .u2-modal-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background: #E0E7FF;
+            overflow: hidden;
+        }
+
+        .u2-modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #4F46E5;
+            margin-bottom: 10px;
+        }
+
+        .u2-modal-text {
+            font-size: 14px;
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .u2-modal-tip {
+            background: #F8FAFC;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            margin-bottom: 20px;
+            border: 1px solid #F1F5F9;
+        }
+
+        .u2-modal-tip i {
+            color: #F59E0B;
+        }
+
+        .u2-modal-tip span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* --- Chat UI --- */
+        .u2-chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .u2-chat-history {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .u2-msg-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            max-width: 90%;
+            animation: u2-slideUp 0.3s ease;
+        }
+
+        @keyframes u2-slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .u2-msg-row.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .u2-mini-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E0E7FF;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .u2-bubble-quiz {
+            padding: 12px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .u2-msg-row.echo .u2-bubble-quiz {
+            background: #F3F4F6;
+            color: #1F2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        .u2-msg-row.user .u2-bubble-quiz {
+            background: #4F46E5;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .u2-input-bar-quiz {
+            padding: 12px 16px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .u2-voice-quiz {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #F3F4F6;
+            color: #6B7280;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .u2-text-input-quiz {
+            flex: 1;
+            height: 40px;
+            background: #F3F4F6;
+            border: none;
+            border-radius: 20px;
+            padding: 0 16px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .u2-send-quiz {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Success Modal --- */
+        .u2-success-panel {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s;
+        }
+
+        .u2-success-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .u2-success-icon {
+            font-size: 64px;
+            color: #10B981;
+            margin-bottom: 20px;
+            transform: scale(0.5);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .u2-success-panel.active .u2-success-icon {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body class="showcase-body u2-body">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper" id="phone-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div class="time" id="currentTime">9:41</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+
+            <div class="u2-content-fixed">
+                <!-- Premium Header -->
+                <div class="quiz-header-u2">
+                    <a href="015.html" class="back-btn-quiz">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <div class="progress-box">
+                        <div class="progress-info">
+                            <span>Display Audit</span>
+                            <span id="prog-text">0/3 Fixed</span>
+                        </div>
+                        <div class="prog-track-u2">
+                            <div class="prog-fill-u2" id="prog-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Stage -->
+                <div class="interactive-stage" id="stage" onclick="handleStageClick(event)">
+                    <img src="https://i.postimg.cc/xd3tWvtX/image-2283.png" class="stage-bg" alt="Shelf">
+
+                    <div class="hotspot-u2 spot-1" onclick="fixItem(event, this, 'product')">
+                        <i class="fas fa-check" style="display:none;"></i>
+                    </div>
+                    <div class="hotspot-u2 spot-2" onclick="fixItem(event, this, 'trash')">
+                        <i class="fas fa-check" style="display:none;"></i>
+                    </div>
+                    <div class="hotspot-u2 spot-3" onclick="fixItem(event, this, 'tag')">
+                        <i class="fas fa-check" style="display:none;"></i>
+                    </div>
+                </div>
+
+                <!-- AI Feedback Modal (Moved out of stage for adaptation) -->
+                <div class="u2-modal-overlay" id="learning-modal">
+                    <div class="u2-learning-card">
+                        <div class="u2-modal-avatar">
+                            <img src="https://i.postimg.cc/yxdf8L2M/Echo_2x.png"
+                                style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <h3 class="u2-modal-title" id="learn-title">Topic Title</h3>
+                        <p class="u2-modal-text" id="learn-text">Explanation.</p>
+                        <div class="u2-modal-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            <span id="learn-tip">Pro Tip goes here.</span>
+                        </div>
+                        <button class="u2-btn-primary" onclick="closeLearningModal()" style="padding: 12px;">Got it,
+                            thanks!</button>
+                    </div>
+                </div>
+
+                <!-- Success Overlay (Moved out of stage for adaptation) -->
+                <div class="u2-success-panel" id="success-modal">
+                    <div class="u2-success-icon"><i class="fas fa-check-circle"></i></div>
+                    <h2 class="u2-title" style="font-size: 24px;">Perfect Score!</h2>
+                    <p class="u2-subtitle" style="margin-bottom: 30px;">You've mastered the shelf display standards.
+                    </p>
+                    <button class="u2-btn-primary" onclick="window.location.href='015.html'">Collect 200 XP</button>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="u2-chat-area">
+                    <div class="u2-chat-history" id="chat-history">
+                        <div class="u2-msg-row echo">
+                            <div class="u2-mini-avatar">
+                                <img src="https://i.postimg.cc/yxdf8L2M/Echo_2x.png"
+                                    style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <div class="u2-bubble-quiz">
+                                Hi Alex! Let's optimize this shelf. Tap on any issues you see, and I'll explain the best
+                                practices.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="u2-input-bar-quiz">
+                        <button class="u2-voice-quiz"><i class="fas fa-microphone"></i></button>
+                        <input type="text" class="u2-text-input-quiz" id="user-input" placeholder="Type or ask Echo...">
+                        <button class="u2-send-quiz" onclick="handleSendClick()"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let fixedCount = 0;
+        const totalItems = 3;
+
+        const knowledgeBase = {
+            'product': {
+                title: "Product Alignment",
+                text: "Excellent eye! Products were messy. Standard procedure is 'Facing Up' - pulling items to the front edge.",
+                tip: "This creates a 'full' appearance and increases sales by 15%."
+            },
+            'trash': {
+                title: "Shelf Hygiene",
+                text: "Correct. Debris signals neglect. Always remove empty boxes and trash immediately.",
+                tip: "Clean shelves build trust in product freshness."
+            },
+            'tag': {
+                title: "Price Compliance",
+                text: "Spot on. Missing tags are a major issue. Every SKU must have a clear price tag below it.",
+                tip: "Missing tags are the #1 cause of abandoned purchases."
+            }
+        };
+
+        const mistakeResponses = [
+            "That looks okay. Try checking product alignment.",
+            "Not there. Look for missing tags or trash.",
+            "Focus on the details. Is everything facing forward?"
+        ];
+
+        // 1. Core Logic
+        function fixItem(e, element, type) {
+            e.stopPropagation();
+            if (element.classList.contains('fixed')) return;
+
+            element.classList.add('fixed');
+            element.querySelector('i').style.display = 'block';
+            fixedCount++;
+
+            const pct = (fixedCount / totalItems) * 100;
+            document.getElementById('prog-bar').style.width = pct + '%';
+            document.getElementById('prog-text').innerText = `${fixedCount}/${totalItems} Fixed`;
+
+            openLearningModal(type);
+        }
+
+        function openLearningModal(type) {
+            const data = knowledgeBase[type];
+            document.getElementById('learn-title').innerText = data.title;
+            document.getElementById('learn-text').innerText = data.text;
+            document.getElementById('learn-tip').innerText = data.tip;
+            document.getElementById('learning-modal').classList.add('active');
+        }
+
+        function closeLearningModal() {
+            document.getElementById('learning-modal').classList.remove('active');
+            if (fixedCount === totalItems) {
+                setTimeout(() => {
+                    document.getElementById('success-modal').classList.add('active');
+                    addEchoMessage("Perfect score! You are ready for the floor.");
+                }, 600);
+            } else {
+                setTimeout(() => addEchoMessage("Great! What else can we fix?"), 500);
+            }
+        }
+
+        function handleStageClick(e) {
+            if (document.getElementById('learning-modal').classList.contains('active')) return;
+
+            const ripple = document.createElement('div');
+            ripple.className = 'wrong-ripple';
+            const rect = document.getElementById('stage').getBoundingClientRect();
+            ripple.style.left = (e.clientX - rect.left) + 'px';
+            ripple.style.top = (e.clientY - rect.top) + 'px';
+            document.getElementById('stage').appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+
+            const randomMsg = mistakeResponses[Math.floor(Math.random() * mistakeResponses.length)];
+            addEchoMessage(randomMsg);
+        }
+
+        // 2. Chat
+        function handleSendClick() {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text) return;
+            addUserMessage(text);
+            input.value = '';
+            setTimeout(() => addEchoMessage("I'm analyzing that... Keep checking the shelves."), 1000);
+        }
+
+        function addEchoMessage(text) {
+            const chatBox = document.getElementById('chat-history');
+            const msgRow = document.createElement('div');
+            msgRow.className = 'u2-msg-row echo';
+            msgRow.innerHTML = `
+                <div class="u2-mini-avatar"><img src="https://i.postimg.cc/yxdf8L2M/Echo_2x.png" style="width:100%;height:100%;object-fit:cover;"></div>
+                <div class="u2-bubble-quiz">${text}</div>
+            `;
+            chatBox.appendChild(msgRow);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const chatBox = document.getElementById('chat-history');
+            const msgRow = document.createElement('div');
+            msgRow.className = 'u2-msg-row user';
+            msgRow.innerHTML = `<div class="u2-bubble-quiz">${text}</div>`;
+            chatBox.appendChild(msgRow);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // 3. System Time
+        setInterval(() => {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const sysTimeEl = document.getElementById('currentTime');
+            if (sysTimeEl) sysTimeEl.innerText = timeStr;
+        }, 1000);
+    </script>
+
+    <!-- Initialize Exam FAB -->
+    <script src="../exam-skills.js"></script>
+    <script>
+        initExamFab({
+            targetUrl: '018.html',
+            label: 'Post-Class Exam',
+            reward: '+200 XP',
+            containerId: 'phone-wrapper'
+        });
+    </script>
+</body>
+
+</html>

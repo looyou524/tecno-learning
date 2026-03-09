@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CAMON 50 Assessment - AI Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* UI-Skills v2.0 Base */
+        :root {
+            --primary-purple: #4F46E5;
+            --primary-indigo: #4338CA;
+            --primary-orange: #EA580C;
+            --success-green: #10B981;
+            --bg-light: #F8F9FA;
+            --card-border: #F3F4F6;
+            --text-main: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #eef2ff;
+        }
+
+        /* Device Frame */
+        .device-bezel {
+            position: relative;
+            width: 375px;
+            height: 812px;
+            background: #111;
+            border-radius: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .mobile-wrapper {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-light);
+            border-radius: 38px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #111;
+            border-bottom-radius: 20px;
+            z-index: 50;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .status-bar {
+            padding: 12px 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #111;
+            height: 44px;
+            z-index: 40;
+        }
+
+        /* Video Styles */
+        .video-container {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: black;
+            aspect-ratio: 16/9;
+            margin-bottom: 1.5rem;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* AI Roleplay Chat Styles */
+        .ai-chat-bubble {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 0 1rem 1rem 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E5E7EB;
+            position: relative;
+            margin-left: 0.5rem;
+        }
+
+        .ai-chat-bubble::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 10px 10px 0;
+            border-color: transparent #fff transparent transparent;
+        }
+
+        /* Result Styles */
+        .res-header-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            padding: 4rem 1.5rem 6rem;
+            color: white;
+            border-radius: 0 0 2.5rem 2.5rem;
+        }
+
+        .res-card-overlap {
+            margin-top: -4rem;
+            padding: 0 1.25rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .res-white-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+        }
+
+        .res-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: #fff;
+            border: 1px solid var(--card-border);
+            margin-bottom: 0.75rem;
+        }
+
+        .res-item.strength {
+            border-left: 4px solid var(--success-green);
+        }
+
+        .res-item.weakness {
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .res-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary-purple);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: transform 0.1s;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            width: 100%;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:active {
+            background: #F9FAFB;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #6B7280;
+            width: 100%;
+            padding: 0.8rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        /* Top Action Bar */
+        .u2-top-bar {
+            position: absolute;
+            top: 44px;
+            /* Below status bar */
+            left: 0;
+            right: 0;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .u2-back-circle {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+            color: #1e293b;
+            pointer-events: auto;
+            text-decoration: none;
+        }
+
+        .u2-back-circle:active {
+            transform: scale(0.9);
+        }
+
+        /* Quiz Styles */
+        .u2-opt-item {
+            padding: 1rem;
+            border: 2px solid #F3F4F6;
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .u2-opt-item.active {
+            border-color: var(--primary-purple);
+            background: #F5F3FF;
+        }
+
+        .u2-radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 50%;
+        }
+
+        .active .u2-radio-circle {
+            background: var(--primary-purple);
+            border-color: var(--primary-purple);
+        }
+
+        /* Full Review Modal (Bottom Sheet) */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #F9FAFB;
+            border-radius: 2rem 2rem 0 0;
+            height: 85%;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 101;
+            display: flex;
+            flex-col;
+            flex-direction: column;
+        }
+
+        .modal-overlay.open .modal-sheet {
+            transform: translateY(0);
+        }
+
+        .review-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #E5E7EB;
+        }
+
+        .review-card.correct {
+            border-left: 4px solid var(--success-green);
+        }
+
+        .review-card.wrong {
+            border-left: 4px solid red;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="u2-body">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <div id="currentTime">9:41</div>
+                <div class="flex gap-2 text-xs">
+                    <i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+
+            <!-- Global Back Button Area -->
+            <div class="u2-top-bar" id="globalTopBar">
+                <a href="015.html" class="u2-back-circle">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </div>
+
+            <!-- Main Content Area -->
+            <div id="mainArea" class="flex-grow overflow-y-auto hide-scrollbar bg-white relative">
+                <!-- Content injected via JS -->
+            </div>
+
+            <!-- Full Review Modal -->
+            <div id="reviewModal" class="modal-overlay">
+                <div class="modal-sheet">
+                    <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto my-3"></div>
+                    <div class="px-5 pb-4 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-lg font-black text-gray-900">All Answers</h2>
+                        <button onclick="closeReview()"
+                            class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="reviewList" class="flex-grow overflow-y-auto p-5 pb-20 hide-scrollbar">
+                        <!-- Questions injected here -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const quizData = [
+            // Q1: Video Question (Restored)
+            {
+                id: 1,
+                type: "single",
+                media: "video",
+                mediaSrc: "https://vjs.zencdn.net/v/oceans.mp4",
+                tag: "Marketing",
+                question: "In the first 3 seconds, which technique is used to hook users?",
+                options: ["Slow intro", "Visual hook", "Black screen", "No music"],
+                answer: 1,
+                score: 5,
+                tip: "Visual hooks increase retention by 40%."
+            },
+            // Q2: AI Roleplay (Modified)
+            {
+                id: 2,
+                type: "ai-sim",
+                tag: "Sales Practice",
+                question: "Handle the objection below:",
+                aiText: "I honestly like the phone, but the brand is weak and it's too expensive compared to others.",
+                answer: "VOICE_KEY",
+                score: 24,
+                tip: "Acknowledge -> Brand proof -> Spec comparison -> Drive trial."
+            },
+            // Q3: Product
+            {
+                id: 3,
+                type: "single",
+                tag: "Product",
+                question: "Best feature for gamers?",
+                options: ["Camera", "Battery", "G85 Processor", "Screen"],
+                answer: 2,
+                score: 4,
+                tip: "Gamers prioritize chipset performance."
+            },
+            // Q4: System (Multi)
+            {
+                id: 4,
+                type: "multi",
+                tag: "System",
+                question: "HIOS Features? (Multi)",
+                options: ["Smart Panel", "Ella", "Peek Proof", "Kids Mode"],
+                answer: [0, 1, 2, 3],
+                score: 4,
+                tip: "HIOS 13 offers all these features."
+            }
+            // Q5 Deleted
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        // --- Init ---
+        function init() {
+            renderQuestion();
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('currentTime').innerText = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // --- Quiz Logic ---
+        function renderQuestion() {
+            const q = quizData[currentIdx];
+            const container = document.getElementById('mainArea');
+
+            let contentHtml = '';
+
+            // 1. Render Media (Video)
+            if (q.media === 'video') {
+                contentHtml += `
+                    <div class="video-container">
+                        <video src="${q.mediaSrc}" controls playsinline></video>
+                    </div>
+                `;
+            }
+
+            // 2. Render Question Title
+            contentHtml += `<h2 class="text-xl font-bold text-gray-900 mb-6">${q.question}</h2>`;
+
+            // 3. Render Interaction Area
+            if (q.type === 'ai-sim') {
+                // AI Roleplay UI
+                contentHtml += `
+                    <div class="flex items-start gap-3 mb-6 animate-pulse">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Customer" class="w-10 h-10 rounded-full bg-gray-200 border border-white shadow-sm">
+                        <div class="ai-chat-bubble">
+                            <p class="text-sm font-medium text-gray-800">"${q.aiText}"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-2xl p-6 text-center border-2 border-dashed border-gray-200 mt-8">
+                        <button onclick="simulateVoice()" class="w-16 h-16 bg-indigo-600 rounded-full text-white text-xl mb-3 shadow-lg hover:scale-105 transition flex items-center justify-center mx-auto">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Hold to Reply</p>
+                    </div>
+                `;
+            } else {
+                // Standard Options
+                contentHtml += `<div class="flex flex-col gap-3">
+                    ${q.options.map((opt, i) => `
+                        <div onclick="selectOpt(${i})" class="u2-opt-item ${Array.isArray(userAnswers[currentIdx]) ? (userAnswers[currentIdx].includes(i) ? 'active' : '') : (userAnswers[currentIdx] === i ? 'active' : '')}">
+                            <div class="u2-radio-circle"></div>
+                            <span class="text-sm font-semibold">${opt}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+
+            container.innerHTML = `
+                <div class="p-4 pt-16">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Question ${currentIdx + 1}/${quizData.length}</span>
+                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">${q.tag}</span>
+                    </div>
+                    ${contentHtml}
+                </div>
+                <div class="absolute bottom-0 w-full p-4 bg-white border-t border-gray-100">
+                    <button onclick="${currentIdx === quizData.length - 1 ? 'submitQuiz()' : 'nextQ()'}" class="btn-primary">
+                        ${currentIdx === quizData.length - 1 ? 'Finish Assessment' : 'Next Question'}
+                    </button>
+                </div>
+            `;
+        }
+
+        function selectOpt(i) {
+            const q = quizData[currentIdx];
+            if (q.type === 'multi') {
+                let arr = userAnswers[currentIdx] || [];
+                if (arr.includes(i)) arr = arr.filter(idx => idx !== i);
+                else arr.push(i);
+                userAnswers[currentIdx] = arr;
+            } else {
+                userAnswers[currentIdx] = i;
+            }
+            renderQuestion();
+        }
+
+        function simulateVoice() { userAnswers[currentIdx] = "VOICE_FILE"; nextQ(); }
+
+        function nextQ() {
+            if (currentIdx < quizData.length - 1) { currentIdx++; renderQuestion(); }
+            else submitQuiz();
+        }
+
+        // --- Result Page ---
+        function submitQuiz() {
+            const container = document.getElementById('mainArea');
+            // Hide the global back button on result page (since result page has its own "Back")
+            document.getElementById('globalTopBar').style.display = 'none';
+
+            // Calculate Score
+            let totalScore = 0, maxScore = 0;
+            let tagStats = {};
+            let strengths = [], weaknesses = [];
+
+            quizData.forEach((q, idx) => {
+                maxScore += q.score;
+                if (!tagStats[q.tag]) tagStats[q.tag] = { total: 0, correct: 0 };
+                tagStats[q.tag].total++;
+
+                let isCorrect = false;
+                if (q.type === 'ai-sim') {
+                    isCorrect = true; // Demo logic
+                    totalScore += (q.score * 0.85); // 85% score for voice
+                    tagStats[q.tag].correct += 0.85;
+                } else {
+                    const ans = userAnswers[idx];
+                    if (Array.isArray(q.answer)) {
+                        // Simple Multi check
+                        if (JSON.stringify(q.answer.sort()) === JSON.stringify((ans || []).sort())) isCorrect = true;
+                    } else {
+                        if (ans === q.answer) isCorrect = true;
+                    }
+                    if (isCorrect) {
+                        totalScore += q.score;
+                        tagStats[q.tag].correct++;
+                    }
+                }
+
+                if (isCorrect) strengths.push(q); else weaknesses.push(q);
+            });
+
+            const finalScore = Math.round(totalScore);
+            const accuracy = Math.round((totalScore / maxScore) * 100);
+            const labels = Object.keys(tagStats);
+            const dataPoints = labels.map(tag => (tagStats[tag].correct / tagStats[tag].total) * 100);
+
+            // Render Result
+            container.innerHTML = `
+                <div class="res-header-bg text-center">
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Assessment Complete</p>
+                    <h1 class="text-6xl font-black tracking-tighter mb-1">${finalScore}</h1>
+                    <p class="text-sm font-medium opacity-90">Total Score Achieved</p>
+                    <div class="flex justify-center gap-8 mt-6 opacity-80">
+                        <div><div class="text-xs uppercase font-bold">Accuracy</div><div class="text-lg font-black">${accuracy}%</div></div>
+                        <div><div class="text-xs uppercase font-bold">Rank</div><div class="text-lg font-black">Top 10%</div></div>
+                    </div>
+                </div>
+
+                <div class="res-card-overlap pb-10">
+                    <!-- Radar Chart -->
+                    <div class="res-white-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-black text-gray-900 uppercase tracking-wide">Skill Distribution</h3>
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Balanced</span>
+                        </div>
+                        <div class="relative h-48 w-full"><canvas id="skillChart"></canvas></div>
+                    </div>
+
+                    <!-- Insight -->
+                    <div class="res-white-card bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+                        <div class="flex items-start gap-4">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-12 h-12 rounded-full border-2 border-white" alt="AI Coach">
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wide mb-1">AI Coach Insight</h3>
+                                <p class="text-sm leading-relaxed text-gray-300">
+                                    "Great job on <span class="text-white font-bold">Product</span>! Your handling of the <span class="text-orange-400 font-bold">Price Objection</span> was good, but try to empathize more before countering."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strengths & Weaknesses Preview -->
+                    <div class="mt-6 mb-2"><h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Highlights</h3></div>
+                    ${strengths.length > 0 ? `
+                        <div class="res-item strength">
+                            <div class="res-icon-box bg-green-100 text-green-600"><i class="fas fa-star"></i></div>
+                            <div>
+                                <div class="text-xs font-bold text-gray-400 uppercase">${strengths[0].tag}</div>
+                                <div class="text-sm font-bold text-gray-900 line-clamp-1">${strengths[0].question}</div>
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${weaknesses.length > 0 ? `
+                        <div class="res-item weakness">
+                            <div class="res-icon-box bg-orange-100 text-orange-600"><i class="fas fa-lightbulb"></i></div>
+                            <div>
+                                <div class="text-xs font-bold text-gray-400 uppercase">${weaknesses[0].tag}</div>
+                                <div class="text-sm font-bold text-gray-900 line-clamp-1">${weaknesses[0].question}</div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-3 mt-8">
+                        <button onclick="location.reload()" class="btn-primary">Retake Assessment</button>
+                        <button onclick="openReview()" class="btn-secondary flex items-center justify-center gap-2">
+                            <i class="far fa-list-alt"></i> Check Full Answers
+                        </button>
+                        <button class="btn-ghost" onclick="window.location.href='015.html'">Back</button>
+                    </div>
+                </div>
+            `;
+
+            initChart(labels, dataPoints);
+        }
+
+        // --- Chart & Review Logic ---
+        function initChart(labels, data) {
+            const ctx = document.getElementById('skillChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                        borderColor: '#4F46E5',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#4F46E5'
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 10, weight: 'bold' } } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function openReview() {
+            const list = document.getElementById('reviewList');
+            list.innerHTML = quizData.map((q, i) => {
+                const ans = userAnswers[i];
+                let isCorrect = false;
+                if (q.type === 'ai-sim') isCorrect = true;
+                else if (Array.isArray(q.answer)) {
+                    if (JSON.stringify(q.answer.sort()) === JSON.stringify((ans || []).sort())) isCorrect = true;
+                }
+                else if (ans === q.answer) isCorrect = true;
+
+                const statusClass = isCorrect ? 'correct' : 'wrong';
+                const statusIcon = isCorrect ? '<i class="fas fa-check text-green-600"></i>' : '<i class="fas fa-times text-red-500"></i>';
+                const statusText = isCorrect ? 'Correct' : 'Incorrect';
+
+                return `
+                <div class="review-card ${statusClass}">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gray-400">Question ${i + 1}</span>
+                        <div class="text-xs font-bold flex items-center gap-1">${statusIcon} ${statusText}</div>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-900 mb-3">${q.question}</h3>
+                    
+                    ${q.type === 'ai-sim' ?
+                        `<div class="bg-gray-50 p-2 rounded text-xs text-gray-600 mb-2 border border-gray-200">
+                            <i class="fas fa-robot mr-1"></i> <b>AI Scenario:</b> "${q.aiText}"
+                         </div>` : ''
+                    }
+
+                    ${!isCorrect && q.type !== 'ai-sim' ? `
+                        <div class="bg-red-50 p-2 rounded mb-2 text-xs text-red-700">
+                            <span class="font-bold">Your Answer:</span> ${q.options[ans] || 'None'}
+                        </div>
+                    ` : ''}
+                    
+                    ${q.type !== 'ai-sim' ? `
+                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 mb-2">
+                            <span class="font-bold">Correct Answer:</span> ${Array.isArray(q.answer) ? 'Multiple' : q.options[q.answer]}
+                        </div>
+                    ` : ''}
+
+                    <div class="mt-3 pt-3 border-t border-gray-100">
+                        <p class="text-xs text-gray-500 leading-relaxed"><span class="font-bold text-indigo-600">AI Tip:</span> ${q.tip}</p>
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('reviewModal').classList.add('open');
+        }
+
+        function closeReview() {
+            document.getElementById('reviewModal').classList.remove('open');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

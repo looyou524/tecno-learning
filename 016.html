@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Simulation - Echo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../showcase-skills.css">
+    <link rel="stylesheet" href="../ui-skills2.css">
+
+    <style>
+        :root {
+            --bg-page: #f0f2f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .mockup-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body class="showcase-body u2-body">
+
+    <div class="device-bezel">
+        <div class="mobile-wrapper">
+            <div class="notch"></div>
+
+            <!-- Floating Back Button -->
+            <a href="015.html" class="back-btn">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+
+            <div class="content-scroll cursor-pointer" onclick="window.location.href='017.html'">
+                <img src="https://i.postimg.cc/28JzBWHr/20260305_161300.jpg" alt="AI Simulation Content"
+                    class="mockup-image">
+            </div>
+
+            <div class="home-indicator"></div>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder for consistency with other pages if needed
+    </script>
+</body>
+
+</html>
