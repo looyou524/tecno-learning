@@ -1,0 +1,158 @@
+<!-- 
+    底部导航公共组件
+    使用方法：
+    1. 在页面中引入此组件的CSS和JS
+    2. 在页面底部添加 <div id="bottom-nav-container"></div>
+    3. 调用 loadBottomNav('当前页面标识') 来加载导航
+    
+    页面标识：home, course, create, study, profile
+-->
+
+<style>
+/* 底部导航样式 */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-white, #FFFFFF);
+    display: flex;
+    padding: 8px 0;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border-color, #EEEEEE);
+    z-index: 100;
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-muted, #999999);
+    font-size: 10px;
+    font-weight: 500;
+    gap: 4px;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+}
+
+.nav-item i {
+    font-size: 22px;
+}
+
+.nav-item.active {
+    color: var(--color-primary, #0057E3);
+}
+
+.nav-item:hover:not(.active) {
+    color: var(--text-sub, #666666);
+}
+
+/* 中间创作按钮特殊样式 */
+.nav-item.create-btn {
+    position: relative;
+}
+
+.nav-item.create-btn .nav-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #0057E3 0%, #4A90D9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -20px;
+    box-shadow: 0 4px 12px rgba(0, 87, 227, 0.3);
+}
+
+.nav-item.create-btn .nav-icon-wrapper i {
+    color: white;
+    font-size: 20px;
+}
+
+.nav-item.create-btn span {
+    margin-top: 4px;
+}
+
+.nav-item.create-btn.active .nav-icon-wrapper {
+    background: linear-gradient(135deg, #0046B8 0%, #3A7BC8 100%);
+}
+</style>
+
+<script>
+// 底部导航配置
+const bottomNavConfig = {
+    items: [
+        { id: 'home', icon: 'fas fa-home', label: '首页', href: '移动端_学习主页_003.html' },
+        { id: 'course', icon: 'fas fa-book-open', label: '必修课', href: '#' },
+        { id: 'create', icon: 'fas fa-plus', label: '创作', href: '移动端_xxzy_上传知识.html', isCenter: true },
+        { id: 'study', icon: 'fas fa-route', label: '学习', href: '#' },
+        { id: 'profile', icon: 'fas fa-user', label: '我的', href: '#' }
+    ]
+};
+
+// 加载底部导航
+function loadBottomNav(activeId = 'home') {
+    const container = document.getElementById('bottom-nav-container');
+    if (!container) {
+        console.error('底部导航容器不存在，请添加 <div id="bottom-nav-container"></div>');
+        return;
+    }
+
+    let navHTML = '<nav class="bottom-nav">';
+    
+    bottomNavConfig.items.forEach(item => {
+        const isActive = item.id === activeId;
+        const activeClass = isActive ? ' active' : '';
+        const centerClass = item.isCenter ? ' create-btn' : '';
+        
+        if (item.isCenter) {
+            navHTML += `
+                <a href="${item.href}" class="nav-item${centerClass}${activeClass}" data-nav-id="${item.id}">
+                    <div class="nav-icon-wrapper">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <span>${item.label}</span>
+                </a>
+            `;
+        } else {
+            navHTML += `
+                <a href="${item.href}" class="nav-item${activeClass}" data-nav-id="${item.id}">
+                    <i class="${item.icon}"></i>
+                    <span>${item.label}</span>
+                </a>
+            `;
+        }
+    });
+    
+    navHTML += '</nav>';
+    container.innerHTML = navHTML;
+
+    // 添加点击事件
+    const navItems = container.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // 如果href是#，阻止默认行为
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+            // 更新激活状态
+            navItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
+
+// 设置当前激活项
+function setActiveNav(navId) {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        if (item.dataset.navId === navId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+</script>

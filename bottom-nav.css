@@ -1,0 +1,84 @@
+/**
+ * 底部导航公共样式
+ * 使用方法：在HTML的<head>中引入此CSS文件
+ * <link rel="stylesheet" href="components/bottom-nav.css">
+ */
+
+/* 底部导航容器 */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-white, #FFFFFF);
+    display: flex;
+    padding: 8px 0;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border-color, #EEEEEE);
+    z-index: 100;
+}
+
+/* 导航项 */
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-muted, #999999);
+    font-size: 10px;
+    font-weight: 500;
+    gap: 4px;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+}
+
+.nav-item i {
+    font-size: 22px;
+}
+
+/* 激活状态 */
+.nav-item.active {
+    color: var(--color-primary, #0057E3);
+}
+
+/* 悬停状态 */
+.nav-item:hover:not(.active) {
+    color: var(--text-sub, #666666);
+}
+
+/* 中间创作按钮特殊样式 */
+.nav-item.create-btn {
+    position: relative;
+}
+
+.nav-item.create-btn .nav-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #0057E3 0%, #4A90D9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -20px;
+    box-shadow: 0 4px 12px rgba(0, 87, 227, 0.3);
+    transition: all 0.2s ease;
+}
+
+.nav-item.create-btn .nav-icon-wrapper i {
+    color: white;
+    font-size: 20px;
+}
+
+.nav-item.create-btn span {
+    margin-top: 4px;
+}
+
+.nav-item.create-btn:hover .nav-icon-wrapper {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 87, 227, 0.4);
+}
+
+.nav-item.create-btn.active .nav-icon-wrapper {
+    background: linear-gradient(135deg, #0046B8 0%, #3A7BC8 100%);
+}
