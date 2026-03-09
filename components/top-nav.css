@@ -1,0 +1,169 @@
+/* 顶部导航公共组件样式（AI Study 小蓝书头部抽取）
+
+使用方法：
+1. 在页面中引入此CSS文件：<link rel="stylesheet" href="components/top-nav.css">
+2. 在HTML中添加顶部导航结构（参考 top-nav.js 中的模板）
+3. 引入JS文件：<script src="components/top-nav.js"></script>
+*/
+
+.header {
+    background: var(--bg-white);
+    padding: 4px 16px 8px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.header-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.header-tab {
+    border: none;
+    background: transparent;
+    padding: 2px 0;
+    cursor: pointer;
+    transition: color 0.2s ease, font-size 0.2s ease, transform 0.1s ease;
+}
+
+.header-tab.course,
+.header-tab.task {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.header-tab.is-active {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.header-actions.flex-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.header-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    font-size: 20px;
+    text-decoration: none;
+    position: relative;
+}
+
+.points-btn {
+    position: relative;
+}
+
+.points-btn i {
+    color: var(--accent-orange);
+}
+
+.points-badge {
+    position: absolute;
+    top: 2px;
+    right: -4px;
+    background: var(--accent-orange);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 32px;
+    text-align: center;
+}
+
+/* 顶部搜索入口（仅保留图标按钮） */
+.search-toggle {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-light);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.search-toggle i {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.search-toggle:hover {
+    background: var(--border-color);
+    transform: translateY(-1px);
+}
+
+/* 右上角赚积分入口 */
+.header-btn.points-btn.new-style {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    width: auto;
+    min-width: 96px;
+    flex-shrink: 0;
+    height: 40px;
+    background: linear-gradient(135deg, #0057E3 0%, #1A73E8 100%);
+    border: none;
+    border-radius: 999px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 87, 227, 0.3);
+}
+
+.header-btn.points-btn.new-style:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 87, 227, 0.4);
+    background: linear-gradient(135deg, #1A73E8 0%, #0057E3 100%);
+}
+
+.points-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.points-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.1;
+}
+
+.points-label {
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.points-value {
+    font-size: 14px;
+    font-weight: 700;
+}
+
