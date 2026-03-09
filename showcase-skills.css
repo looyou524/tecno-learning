@@ -1,0 +1,180 @@
+/* 
+   Showcase Skills - Mobile Device Bezel & Web-to-Mobile Centering
+   Allows any web page to be wrapped in a realistic phone frame for demo purposes.
+*/
+
+:root {
+    --device-width: 414px;
+    --device-height: 896px;
+    --bezel-color: #1a1a1a;
+    --screen-bg: #F8F9FA;
+}
+
+/* Base Body Styling for Showcase */
+.showcase-body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Phone Frame Bezel */
+.device-bezel {
+    width: var(--device-width);
+    height: var(--device-height);
+    background: var(--bezel-color);
+    border-radius: 60px;
+    padding: 12px; /* Bezel thickness */
+    box-shadow: 
+        0 0 0 2px #444, /* Metal outer ring */
+        0 50px 100px -20px rgba(0,0,0,0.3),
+        0 30px 60px -30px rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Hardware Buttons: Power Button (Right) */
+.device-bezel::before {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 180px;
+    width: 3px;
+    height: 80px;
+    background: var(--bezel-color);
+    border-radius: 0 4px 4px 0;
+    border: 1px solid #333;
+}
+
+/* Hardware Buttons: Volume Up/Down (Left) */
+.device-bezel::after {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 140px;
+    width: 3px;
+    height: 50px;
+    background: var(--bezel-color);
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #333;
+    box-shadow: 0 65px 0 0 #1a1a1a; /* Hack for Volume Down */
+}
+
+/* Screen Wrapper */
+.mobile-wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: var(--screen-bg);
+    border-radius: 48px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+/* iPhone Notch Area */
+.notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 30px;
+    background: var(--bezel-color);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.notch::before { /* Speaker Grill */
+    content: '';
+    width: 40px;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+}
+
+/* System Status Bar Layout */
+.status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 90;
+    pointer-events: none;
+    user-select: none;
+}
+
+.status-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding-bottom: 2px;
+}
+
+/* Content Container with Internal Scrolling */
+.content-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 100px; /* Room for bottom nav and home indicator */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.content-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Generic Home Indicator (Bottom Line) */
+.home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 5px;
+    background: #000;
+    border-radius: 10px;
+    opacity: 0.2;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Responsive: Fill screen on real mobile devices */
+@media (max-width: 480px) {
+    .showcase-body { 
+        padding: 0; 
+        background-color: var(--screen-bg);
+    }
+    .device-bezel {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+    }
+    .mobile-wrapper { border-radius: 0; }
+    .device-bezel::before, .device-bezel::after { display: none; }
+    .notch { width: 120px; height: 25px; } /* Slightly smaller notch for real mobile */
+}
